@@ -1,0 +1,38 @@
+[
+  {
+    "id": "japan",
+    "iso2": "JP",
+    "name": "Japan",
+    "lat": 35.181,
+    "lon": 137.4806,
+    "zoom": 6.8,
+    "count": 16,
+    "spots": [
+      "tokyo",
+      "kobe",
+      "osaka-shi",
+      "muko"
+    ],
+    "cover": [
+      "2025-04-25-1270ad7206",
+      "2025-04-25-d5bc53ef15",
+      "2025-04-25-fba37e4263"
+    ],
+    "last_visit": "2025-04-25",
+    "visits": [
+      {
+        "id": "japan-2025-04",
+        "start": "2025-04-14",
+        "end": "2025-04-25",
+        "photos": 16,
+        "label": "20250413 Japan",
+        "companions": [
+          "zach"
+        ],
+        "photographers": [
+          "zach"
+        ]
+      }
+    ]
+  }
+]

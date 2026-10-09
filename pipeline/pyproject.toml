@@ -1,0 +1,33 @@
+[project]
+name = "pipeline"
+version = "0.1.0"
+description = "Where's Zach photo pipeline: photos/inbox -> photos/out + data/*.json"
+authors = [
+    { name = "Zach Hatzenbeller", email = "zhatz111@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "boto3>=1.43.111",
+    "pillow>=12.3.0",
+    "pillow-heif>=1.8.0",
+    "pycountry>=26.2.16",
+    "pydantic>=2.14.0",
+    "reverse-geocoder>=1.5.1",
+    "rich>=15.0.0",
+    "scikit-learn>=1.9.1",
+    "shapely>=2.2.0",
+    "typer>=0.27.3",
+    "tzdata>=2026.5",
+]
+
+[project.scripts]
+pipeline = "pipeline.cli:app"
+
+[build-system]
+requires = ["uv_build>=0.9.17,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]

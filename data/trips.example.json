@@ -1,0 +1,23 @@
+[
+  {
+    "id": "example-current",
+    "name": "Lofoten, Norway",
+    "lat": 68.2,
+    "lon": 14.0,
+    "start": "2026-10-05",
+    "end": "2026-10-16",
+    "tz": "Europe/Oslo",
+    "precision": "region",
+    "live_delay_days": 1
+  },
+  {
+    "id": "example-upcoming",
+    "name": "Queenstown, New Zealand",
+    "lat": -45.0,
+    "lon": 168.7,
+    "start": "2027-01-12",
+    "end": "2027-01-26",
+    "tz": "Pacific/Auckland",
+    "precision": "region"
+  }
+]

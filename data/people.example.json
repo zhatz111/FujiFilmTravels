@@ -1,0 +1,6 @@
+[
+  { "id": "zach", "name": "Zach", "color": "#2D5A43" },
+  { "id": "alex", "name": "Alex", "color": "#B4551A", "relation": "friend" },
+  { "id": "sam", "name": "Sam", "color": "#3F6F86", "relation": "friend" },
+  { "id": "dad", "name": "Dad", "color": "#7A4E8C", "relation": "family", "show_photos": false }
+]

@@ -1,0 +1,3 @@
+# Virtual uv workspace so `uv run pipeline ...` works from the repo root.
+[tool.uv.workspace]
+members = ["pipeline"]

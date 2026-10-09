@@ -1,0 +1,53 @@
+[
+  {
+    "id": "buenos-aires",
+    "country": "argentina",
+    "name": "Buenos Aires",
+    "lat": -34.6037,
+    "lon": -58.3816,
+    "radius_km": 3.2,
+    "zoom": 12.6,
+    "count": 1,
+    "photos": [
+      "2025-03-09-f6e5d4c3b2"
+    ],
+    "visits": [
+      {
+        "visit": "argentina-2025-03",
+        "start": "2025-03-08",
+        "end": "2025-03-10",
+        "photos": 1,
+        "people": [
+          "zach",
+          "alex",
+          "sam"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "el-chalten",
+    "country": "argentina",
+    "name": "El Chaltén",
+    "lat": -49.3301,
+    "lon": -72.8861,
+    "radius_km": 7.5,
+    "zoom": 11.4,
+    "count": 1,
+    "photos": [
+      "2025-03-14-a1b2c3d4e5"
+    ],
+    "visits": [
+      {
+        "visit": "argentina-2025-03",
+        "start": "2025-03-12",
+        "end": "2025-03-18",
+        "photos": 1,
+        "people": [
+          "zach",
+          "alex"
+        ]
+      }
+    ]
+  }
+]

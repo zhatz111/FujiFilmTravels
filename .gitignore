@@ -1,0 +1,7 @@
+photos/
+config/pipeline.toml
+.env
+node_modules/
+.venv/
+__pycache__/
+pipeline/.cache/

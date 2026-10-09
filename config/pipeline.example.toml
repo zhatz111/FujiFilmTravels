@@ -1,0 +1,49 @@
+# Copy to config/pipeline.toml (gitignored) and fill in.
+inbox = "photos/inbox"
+out = "photos/out"
+data = "data"
+sizes = [480, 1600, 2560]
+webp_quality = 82
+coord_decimals = 4          # ~11 m; use 3 for ~110 m
+include_unmapped = false
+visit_gap_days = 4          # a gap longer than this between photo dates starts a new visit
+
+# Photos without GPS borrow the location of the nearest-in-time GPS photo by the same
+# photographer, if one exists within this many hours. 0 turns it off.
+# Hand-entered locations go in photos/inbox/locations.toml (see that file).
+gps_fill_hours = 3
+
+# [DECIDE] Places that must never appear on the map (home, family, etc.).
+[[private_zones]]
+name = "home"
+lat = 0.0
+lon = 0.0
+radius_km = 2.0
+
+[spots]
+eps_km = 8.0
+min_samples = 1
+
+# Optional: fix or name a visit when photo dates don't cover the whole trip.
+# [[visit_overrides]]
+# country = "argentina"
+# start = "2025-03-07"
+# end = "2025-03-22"
+# label = "Patagonia trip"
+# companions = ["zach", "alex", "sam"]   # people on the trip, even if they took no photos
+
+# Optional: narrow who was at one spot on one visit.
+# [[spot_people]]
+# country = "argentina"
+# spot = "el-chalten"
+# visit = "argentina-2025-03"
+# people = ["zach", "alex"]
+
+[overrides]
+# "el-calafate" = { merge_into = "el-chalten" }
+# "bariloche"   = { name = "Bariloche & Lakes" }
+
+[r2]
+bucket = "whereszach-photos"
+public_base_url = "https://img.example.com"   # [DECIDE] domain
+# Credentials from .env: R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY

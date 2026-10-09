@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --dir site dev",
+    "build": "pnpm --dir site build",
+    "preview": "pnpm --dir site preview",
+    "check": "pnpm --dir site check",
+    "lint": "pnpm --dir site lint",
+    "test": "pnpm --dir site test"
+  }
+}

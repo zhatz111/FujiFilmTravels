@@ -1,0 +1,838 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Where's Zach — Photo Globe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=Karla:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E7EDEA}
+a{color:#2D5A43}a:hover{color:#1C3B2C}
+button{font:inherit}
+button:focus-visible,a:focus-visible,canvas:focus-visible{outline:2px solid #2D5A43;outline-offset:3px}
+@keyframes livepulse{0%{transform:scale(1);opacity:0.6}100%{transform:scale(2.8);opacity:0}}
+@media (prefers-reduced-motion: reduce){.live-ring{animation:none!important}}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #E7EDEA; color: #17231D; font-family: Karla, 'Helvetica Neue', sans-serif">
+<div style="max-width: 1440px; margin: 0 auto; padding: 28px 32px 64px; box-sizing: border-box; display: flex; flex-direction: column; gap: 32px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="#top" style="display: flex; align-items: baseline; gap: 12px; text-decoration: none">
+<span style="font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 24px; letter-spacing: 0.01em; color: #B4551A">where's zach</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #4F6158">// zach</span>
+</a>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; gap: 4px; font-family: 'IBM Plex Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.08em">
+<a href="#globe" style="padding: 12px 14px; color: #17231D; text-decoration: none; font-size: 13px">Globe</a>
+<a href="#gallery" style="padding: 12px 14px; color: #4F6158; text-decoration: none; font-size: 13px">Gallery</a>
+<a href="#about" style="padding: 12px 14px; color: #4F6158; text-decoration: none; font-size: 13px">About</a>
+<a href="https://instagram.com/rawtravel.zach" style="padding: 12px 14px; color: #2D5A43; text-decoration: none; font-size: 13px">@rawtravel.zach</a>
+</nav>
+</header>
+
+<section style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 14px; max-width: 820px">
+<h1 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 54px; line-height: 1.05; letter-spacing: 0.01em; color: #12201A">Places I've pointed a camera at.</h1>
+<p style="margin: 0; font-size: 18px; line-height: 1.5; color: #4F6158">Nature and travel photography, pinned to where each frame was shot. Spin the globe, pick a destination, and fly in.</p>
+<sc-if value="{{isLive}}" hint-placeholder-val="{{ true }}">
+<button onClick="{{live.show}}" style="align-self: flex-start; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 8px 18px 8px 14px; border-radius: 999px; border: 1px solid #A9D6BF; background: #E3F3EA; color: #14402B; font-size: 15px; cursor: pointer">
+<span style="position: relative; width: 12px; height: 12px; flex: none">
+<span class="live-ring" style="position: absolute; inset: 0; border-radius: 50%; background: #1E9E68; animation: livepulse 1.8s ease-out infinite"></span>
+<span style="position: absolute; inset: 0; border-radius: 50%; background: #1E9E68; border: 2px solid #FFFFFF; box-sizing: border-box"></span>
+</span>
+<span><span style="font-weight: 700">Currently in {{live.name}}</span><span style="color: #2D5A43"> · through {{live.endText}}</span></span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #2D5A43">Show on globe →</span>
+</button>
+</sc-if>
+</div>
+<div style="display: flex; gap: 32px; font-family: 'IBM Plex Mono', ui-monospace, monospace">
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 30px; color: #3F6F86">{{countryCount}}</span><span style="font-size: 11px; color: #4F6158; letter-spacing: 0.14em; text-transform: uppercase">Countries</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 30px; color: #B4551A">{{placeCount}}</span><span style="font-size: 11px; color: #4F6158; letter-spacing: 0.14em; text-transform: uppercase">Spots</span></div>
+<div style="display: flex; flex-direction: column; gap: 4px"><span style="font-size: 30px; color: #2D5A43">{{totalPhotos}}</span><span style="font-size: 11px; color: #4F6158; letter-spacing: 0.14em; text-transform: uppercase">Photos</span></div>
+</div>
+</section>
+
+<section id="globe" aria-label="Photo globe" style="display: flex; flex-wrap: wrap; border-radius: 20px; overflow: hidden; border: 1px solid #C3D0CA; background: linear-gradient(180deg, #D6E4E6 0%, #E9EFEC 60%, #DFE7E2 100%); box-shadow: 0 10px 40px rgba(23, 35, 29, 0.08)">
+
+<div style="position: relative; flex: 999 1 620px; min-width: 0; height: 640px; overflow: hidden">
+<div aria-hidden="true" style="position: absolute; right: 12%; top: 70px; width: 160px; height: 160px; border-radius: 50%; background: #F6E2C4; opacity: 0.9"></div>
+<svg aria-hidden="true" viewBox="0 0 1200 300" preserveAspectRatio="none" style="position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 300px"><path fill="#C7D5D2" d="M0 300 L0 133 L13 141 L27 143 L40 132 L54 140 L67 144 L81 139 L94 144 L108 148 L121 150 L135 150 L148 155 L162 149 L175 147 L189 143 L202 148 L216 149 L229 146 L243 139 L256 137 L270 137 L283 134 L297 146 L310 155 L324 131 L337 114 L351 112 L364 108 L378 110 L391 112 L404 131 L418 121 L431 118 L445 136 L458 142 L472 148 L485 143 L499 129 L512 130 L526 131 L539 120 L553 114 L566 113 L580 105 L593 104 L607 105 L620 105 L634 100 L647 106 L661 114 L674 117 L688 109 L701 116 L715 111 L728 119 L742 110 L755 118 L769 118 L782 106 L796 104 L809 104 L822 107 L836 98 L849 88 L863 90 L876 85 L890 87 L903 94 L917 79 L930 82 L944 93 L957 90 L971 83 L984 90 L998 92 L1011 100 L1025 97 L1038 83 L1052 82 L1065 78 L1079 85 L1092 87 L1106 73 L1119 62 L1133 70 L1146 76 L1160 70 L1173 70 L1187 74 L1200 78 L1200 300 Z"></path><path fill="#AFC3BE" d="M0 300 L0 187 L13 182 L27 178 L40 153 L54 171 L67 183 L81 179 L94 187 L108 190 L121 184 L135 194 L148 191 L162 188 L175 180 L189 184 L202 183 L216 189 L229 183 L243 184 L256 175 L270 183 L283 185 L297 189 L310 193 L324 183 L337 190 L351 211 L364 195 L378 177 L391 162 L404 171 L418 172 L431 183 L445 190 L458 192 L472 195 L485 193 L499 202 L512 191 L526 186 L539 189 L553 207 L566 199 L580 188 L593 183 L607 193 L620 190 L634 203 L647 185 L661 196 L674 206 L688 192 L701 194 L715 206 L728 207 L742 213 L755 213 L769 213 L782 210 L796 202 L809 209 L822 207 L836 205 L849 204 L863 211 L876 200 L890 185 L903 160 L917 172 L930 173 L944 188 L957 188 L971 181 L984 185 L998 185 L1011 172 L1025 163 L1038 181 L1052 185 L1065 189 L1079 186 L1092 179 L1106 188 L1119 187 L1133 179 L1146 178 L1160 169 L1173 171 L1187 182 L1200 174 L1200 300 Z"></path><path fill="#93ADA6" d="M0 300 L0 251 L13 231 L27 234 L40 230 L54 226 L67 224 L81 208 L94 206 L108 199 L121 226 L135 228 L148 225 L162 223 L175 217 L189 209 L202 206 L216 210 L229 208 L243 215 L256 214 L270 214 L283 226 L297 231 L310 227 L324 225 L337 230 L351 245 L364 243 L378 241 L391 249 L404 242 L418 240 L431 247 L445 251 L458 252 L472 255 L485 232 L499 241 L512 233 L526 220 L539 222 L553 227 L566 224 L580 215 L593 215 L607 215 L620 226 L634 232 L647 234 L661 243 L674 241 L688 234 L701 238 L715 243 L728 241 L742 235 L755 237 L769 217 L782 222 L796 226 L809 213 L822 214 L836 206 L849 212 L863 196 L876 188 L890 194 L903 203 L917 186 L930 185 L944 188 L957 185 L971 198 L984 188 L998 191 L1011 185 L1025 196 L1038 196 L1052 193 L1065 185 L1079 198 L1092 204 L1106 211 L1119 220 L1133 222 L1146 217 L1160 211 L1173 204 L1187 215 L1200 204 L1200 300 Z"></path></svg>
+
+<canvas ref="{{setCanvas}}" data-globe="1" tabindex="0" role="img" aria-label="Interactive globe of photo locations. Drag to spin it, or click a pin to fly in. The destination list beside it does the same." onPointerDown="{{onDown}}" onPointerMove="{{onMove}}" onPointerUp="{{onUp}}" onPointerLeave="{{onLeave}}" style="position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; cursor: grab"></canvas>
+
+<nav aria-label="Breadcrumb" style="position: absolute; left: 16px; top: 16px; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: 10px; background: rgba(247, 250, 248, 0.94); border: 1px solid #C3D0CA; font-family: 'IBM Plex Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.06em">
+<button onClick="{{goWorld}}" style="min-height: 40px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: {{worldColor}}; font-size: 12px; cursor: pointer">World</button>
+<sc-if value="{{isCountry}}" hint-placeholder-val="{{ false }}">
+<span aria-hidden="true" style="color: #8A9A92">/</span>
+<button onClick="{{goCountry}}" style="min-height: 40px; padding: 0 12px; border: 0; border-radius: 8px; background: transparent; color: {{countryColor}}; font-size: 12px; cursor: pointer">{{countryName}}</button>
+</sc-if>
+<sc-if value="{{hasPlace}}" hint-placeholder-val="{{ false }}">
+<span aria-hidden="true" style="color: #8A9A92">/</span>
+<span style="padding: 0 12px; color: #17231D; font-size: 12px">{{placeName}}</span>
+</sc-if>
+</nav>
+
+<div aria-label="Map legend" style="position: absolute; left: 16px; bottom: 64px; display: flex; flex-direction: column; gap: 8px; padding: 10px 12px; border-radius: 10px; background: rgba(247, 250, 248, 0.94); border: 1px solid #C3D0CA; font-size: 12px; color: #17231D">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #1E9E68; border: 2px solid #FFFFFF; box-shadow: 0 0 0 3px rgba(30, 158, 104, 0.3)"></span>Here now</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; border: 2.5px solid #2F6FA3; box-sizing: border-box"></span>Upcoming trip</span>
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 50%; background: #B4551A"></span>Visited</span>
+</div>
+<div style="position: absolute; left: 50%; bottom: 18px; transform: translateX(-50%); padding: 8px 14px; border-radius: 999px; background: rgba(247, 250, 248, 0.94); border: 1px solid #C3D0CA; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #4F6158; white-space: nowrap">{{mapHint}}</div>
+</div>
+
+<aside style="flex: 1 1 300px; min-width: 0; box-sizing: border-box; padding: 28px 24px; display: flex; flex-direction: column; gap: 18px; background: rgba(247, 250, 248, 0.7); border-left: 1px solid #C3D0CA">
+<sc-if value="{{isWorld}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #B4551A">Destinations</span>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{dests}}" as="d" hint-placeholder-count="6">
+<button onClick="{{d.open}}" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 8px 14px; border-radius: 10px; border: 1px solid #C3D0CA; background: #F6F9F7; color: #17231D; text-align: left; cursor: pointer">
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 17px; font-weight: 600">{{d.name}}</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #4F6158">{{d.coord}}</span>
+</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #2D5A43">{{d.count}}</span>
+</button>
+</sc-for>
+</div>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #2F6FA3; padding-top: 6px">Upcoming trips</span>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{upcoming}}" as="u" hint-placeholder-count="2">
+<button onClick="{{u.show}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 8px 14px; border-radius: 10px; border: 1px dashed #8FB0C9; background: #F1F6F9; color: #17231D; text-align: left; cursor: pointer">
+<span style="width: 12px; height: 12px; border-radius: 50%; border: 2.5px solid #2F6FA3; box-sizing: border-box; flex: none"></span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-size: 16px; font-weight: 600">{{u.name}}</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #4F6158">{{u.range}}</span>
+</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #2F6FA3; white-space: nowrap">{{u.countdown}}</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{isCountry}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<button onClick="{{goWorld}}" style="align-self: flex-start; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid #C3D0CA; background: transparent; color: #4F6158; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer">← All destinations</button>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 34px; color: #12201A">{{countryName}}</h2>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #4F6158">{{countryCoord}} · {{countryPhotos}}</span>
+</div>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #B4551A">Spots</span>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{spots}}" as="sp" hint-placeholder-count="4">
+<button onClick="{{sp.open}}" aria-pressed="{{sp.pressed}}" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 52px; padding: 8px 14px; border-radius: 10px; border: 1px solid {{sp.border}}; background: {{sp.bg}}; color: {{sp.fg}}; text-align: left; cursor: pointer">
+<span style="font-size: 16px; font-weight: 600">{{sp.name}}</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px">{{sp.count}}</span>
+</button>
+</sc-for>
+</div>
+<a href="#gallery" style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 12px 0">View {{galleryCount}} ↓</a>
+</div>
+</sc-if>
+</aside>
+</section>
+
+<section id="gallery" aria-label="Gallery" style="display: flex; flex-direction: column; gap: 20px">
+<sc-if value="{{isWorld}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px">
+<h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 28px; color: #12201A">Countries</h2>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #4F6158; text-transform: uppercase; letter-spacing: 0.1em">Sorted by most recent trip</span>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px">
+<sc-for list="{{cards}}" as="card" hint-placeholder-count="6">
+<button onClick="{{card.open}}" style="display: flex; flex-direction: column; gap: 12px; padding: 10px; border-radius: 12px; border: 1px solid #C3D0CA; background: #F6F9F7; color: #17231D; text-align: left; cursor: pointer">
+<span style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: 1fr 1fr; gap: 4px; width: 100%; aspect-ratio: 4 / 3; border-radius: 6px; overflow: hidden">
+<span style="grid-row: 1 / 3; background: {{card.tone}}"></span>
+<span style="background: {{card.tone2}}"></span>
+<span style="background: {{card.tone3}}"></span>
+</span>
+<span style="display: flex; flex-direction: column; gap: 4px; padding: 0 4px 4px">
+<span style="font-size: 18px; font-weight: 600">{{card.name}}</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #4F6158">{{card.meta}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isCountry}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 16px">
+<h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 34px; color: #12201A">{{galleryTitle}}</h2>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #4F6158">{{coords}}</span>
+</div>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #4F6158; text-transform: uppercase; letter-spacing: 0.1em">{{galleryCount}}</span>
+</div>
+<div role="group" aria-label="Filter by spot" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{chips}}" as="chip" hint-placeholder-count="5">
+<button onClick="{{chip.open}}" aria-pressed="{{chip.pressed}}" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{chip.border}}; background: {{chip.bg}}; color: {{chip.fg}}; font-size: 14px; font-weight: 600; cursor: pointer">{{chip.name}}<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; font-weight: 400; opacity: 0.8">{{chip.count}}</span></button>
+</sc-for>
+</div>
+<div style="columns: 4 240px; column-gap: 16px">
+<sc-for list="{{tiles}}" as="ph" hint-placeholder-count="8">
+<button onClick="{{ph.open}}" aria-label="{{ph.label}}" style="display: block; width: 100%; margin: 0 0 16px; padding: 6px; border-radius: 10px; border: 1px solid #C3D0CA; background: #F6F9F7; color: #17231D; text-align: left; cursor: zoom-in; break-inside: avoid">
+<span style="display: flex; align-items: flex-end; width: 100%; aspect-ratio: {{ph.aspect}}; border-radius: 6px; background: {{ph.tone}}; padding: 12px; box-sizing: border-box">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-5 4 4 3-3 6 6"></path><circle cx="16" cy="8" r="2"></circle><rect x="3" y="4" width="18" height="16" rx="2"></rect></svg>
+</span>
+<span style="display: flex; justify-content: space-between; gap: 8px; padding: 10px 4px 4px; font-size: 14px">
+<span style="font-weight: 600">{{ph.place}}</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #4F6158">{{ph.coord}}</span>
+</span>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+</section>
+
+<footer id="about" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding-top: 24px; border-top: 1px solid #C3D0CA; font-size: 14px; color: #4F6158">
+<span>Photos and words by Zach. Every pin comes straight from a photo's GPS data.</span>
+<a href="https://instagram.com/rawtravel.zach">Instagram</a>
+</footer>
+</div>
+
+<sc-if value="{{lbOpen}}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-modal="true" aria-label="Photo viewer" style="position: fixed; inset: 0; z-index: 10; background: rgba(231, 237, 234, 0.97); display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 32px; padding: 72px 32px 32px; box-sizing: border-box; overflow-y: auto">
+<button onClick="{{lbClose}}" aria-label="Close viewer" style="position: absolute; top: 16px; right: 16px; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #B4551A; background: #F6F9F7; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B4551A" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+<div style="flex: 999 1 560px; max-width: 980px; display: flex; align-items: center; gap: 12px">
+<button onClick="{{lbPrev}}" aria-label="Previous photo" style="flex: none; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2D5A43; background: #F6F9F7; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D5A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button>
+<div style="flex: 1; min-width: 0; max-height: 72vh; aspect-ratio: {{lb.aspect}}; border-radius: 8px; background: {{lb.tone}}; border: 1px solid #B4551A; box-shadow: 0 20px 60px rgba(23, 35, 29, 0.25); display: flex; align-items: center; justify-content: center">
+<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l5-5 4 4 3-3 6 6"></path><circle cx="16" cy="8" r="2"></circle><rect x="3" y="4" width="18" height="16" rx="2"></rect></svg>
+</div>
+<button onClick="{{lbNext}}" aria-label="Next photo" style="flex: none; width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1px solid #2D5A43; background: #F6F9F7; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2D5A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button>
+</div>
+<aside style="flex: 1 1 260px; max-width: 320px; display: flex; flex-direction: column; gap: 20px; color: #17231D">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #4F6158">{{lbPos}}</span>
+<h3 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 28px; color: #12201A">{{lb.place}}</h3>
+<span style="font-size: 15px; color: #4F6158">{{lb.country}}</span>
+</div>
+<dl style="margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; font-size: 14px">
+<dt style="color: #4F6158">Location</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #2D5A43">{{lb.coord}}</dd>
+<dt style="color: #4F6158">Taken</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px">[DATE FROM EXIF]</dd>
+<dt style="color: #4F6158">Settings</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px">{{lb.exif}}</dd>
+<dt style="color: #4F6158">Camera</dt><dd style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px">[CAMERA / LENS]</dd>
+</dl>
+<p style="margin: 0; font-size: 15px; line-height: 1.55; color: #33433B">[Optional one-line caption or story behind the shot.]</p>
+</aside>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  db() {
+    if (this._db) return this._db;
+    var C = [
+      { id: 'argentina', name: 'Argentina', lat: -42.0, lon: -65.0, z: 7, tones: ['#6F8A9A', '#B9A27A', '#4F6B5E', '#8C9DA6'], places: [
+        { id: 'buenosaires', name: 'Buenos Aires', lat: -34.60, lon: -58.38, n: 6, r: 0.04 },
+        { id: 'elchalten', name: 'El Chaltén', lat: -49.33, lon: -72.89, n: 7, r: 0.07 } ] },
+      { id: 'iceland', name: 'Iceland', lat: 64.9, lon: -19.0, z: 14, tones: ['#5B6B73', '#3E4E57', '#8D9A9C', '#6E7E6A'], places: [
+        { id: 'reykjavik', name: 'Reykjavík', lat: 64.15, lon: -21.94, n: 7 },
+        { id: 'kirkjufell', name: 'Kirkjufell', lat: 64.94, lon: -23.31, n: 5 },
+        { id: 'vik', name: 'Vík', lat: 63.42, lon: -19.0, n: 6 },
+        { id: 'jokulsarlon', name: 'Jökulsárlón', lat: 64.05, lon: -16.18, n: 4 } ] },
+      { id: 'portugal', name: 'Portugal', lat: 39.4, lon: -8.2, z: 17, left: true, tones: ['#B8674A', '#7A9CB0', '#C98B5E', '#5E7A8A'], places: [
+        { id: 'porto', name: 'Porto', lat: 41.15, lon: -8.61, n: 6 },
+        { id: 'douro', name: 'Douro Valley', lat: 41.16, lon: -7.79, n: 4 },
+        { id: 'lisbon', name: 'Lisbon', lat: 38.72, lon: -9.14, n: 5 },
+        { id: 'lagos', name: 'Lagos', lat: 37.10, lon: -8.67, n: 3 } ] },
+      { id: 'italy', name: 'Italy', lat: 43.2, lon: 12.6, z: 7, tones: ['#B7834F', '#6F7F5A', '#A0705A', '#557086'], places: [
+        { id: 'dolomites', name: 'Dolomites', lat: 46.41, lon: 11.84, n: 5 },
+        { id: 'florence', name: 'Florence', lat: 43.77, lon: 11.25, n: 6 },
+        { id: 'rome', name: 'Rome', lat: 41.9, lon: 12.5, n: 4 },
+        { id: 'amalfi', name: 'Amalfi Coast', lat: 40.63, lon: 14.6, n: 5 } ] },
+      { id: 'japan', name: 'Japan', lat: 38.0, lon: 137.5, z: 5, tones: ['#8E5050', '#4F5D6B', '#7B8C6E', '#A47A6A'], places: [
+        { id: 'biei', name: 'Biei', lat: 43.59, lon: 142.47, n: 5 },
+        { id: 'tokyo', name: 'Tokyo', lat: 35.68, lon: 139.69, n: 8 },
+        { id: 'kyoto', name: 'Kyoto', lat: 35.01, lon: 135.77, n: 7 },
+        { id: 'hiroshima', name: 'Hiroshima', lat: 34.39, lon: 132.45, n: 4 } ] },
+      { id: 'costarica', name: 'Costa Rica', lat: 10.0, lon: -84.6, z: 12, tones: ['#3F6B4E', '#2F5446', '#6E8F62', '#4E6E7A'], places: [
+        { id: 'arenal', name: 'Arenal', lat: 10.46, lon: -84.7, n: 5 },
+        { id: 'tortuguero', name: 'Tortuguero', lat: 10.54, lon: -83.5, n: 3 },
+        { id: 'tamarindo', name: 'Tamarindo', lat: 10.3, lon: -85.84, n: 4 },
+        { id: 'manuelantonio', name: 'Manuel Antonio', lat: 9.39, lon: -84.14, n: 6 } ] },
+      { id: 'peru', name: 'Peru', lat: -11.8, lon: -75.0, z: 6, tones: ['#7A6A4F', '#A8794F', '#5E7356', '#6B6F7E'], places: [
+        { id: 'huaraz', name: 'Huaraz', lat: -9.53, lon: -77.53, n: 4 },
+        { id: 'lima', name: 'Lima', lat: -12.05, lon: -77.04, n: 3 },
+        { id: 'machupicchu', name: 'Machu Picchu', lat: -13.16, lon: -72.55, n: 6 },
+        { id: 'huacachina', name: 'Huacachina', lat: -14.09, lon: -75.76, n: 5 } ] }
+    ];
+    var aspects = ['4 / 5', '3 / 2', '1 / 1', '2 / 3', '16 / 9', '3 / 4'];
+    var exifs = ['24mm · f/8 · 1/250s · ISO 100', '35mm · f/5.6 · 1/500s · ISO 200', '50mm · f/2 · 1/1000s · ISO 100', '85mm · f/2.8 · 1/640s · ISO 160', '16mm · f/11 · 1/60s · ISO 100'];
+    var g = 0, places = 0, self = this;
+    C.forEach(function (c) {
+      c.photos = [];
+      c.places.forEach(function (p, pi) {
+        places++;
+        p.photos = [];
+        p.r = p.r || 0.035;
+        for (var i = 0; i < p.n; i++) {
+          var ang = i * 2.39996 + pi * 1.3 + 0.6, rr = p.r * Math.sqrt((i + 0.6) / p.n);
+          var la = p.lat + rr * Math.sin(ang), lo = p.lon + rr * Math.cos(ang) / Math.cos(p.lat * Math.PI / 180);
+          var ph = { idx: i, lat: la, lon: lo, place: p.name, country: c.name, coord: self.fmt(la, lo, 4), tone: c.tones[(i + pi) % c.tones.length], aspect: aspects[g % aspects.length], exif: exifs[g % exifs.length], label: 'Open photo ' + (i + 1) + ' from ' + p.name };
+          g++;
+          p.photos.push(ph); c.photos.push(ph);
+        }
+      });
+      c.count = c.photos.length;
+    });
+    this._db = { countries: C, total: g, places: places };
+    return this._db;
+  }
+  fmt(lat, lon, dp) {
+    dp = dp || 2;
+    return Math.abs(lat).toFixed(dp) + '°' + (lat >= 0 ? 'N' : 'S') + ' ' + Math.abs(lon).toFixed(dp) + '°' + (lon >= 0 ? 'E' : 'W');
+  }
+  theme() {
+    return {
+      glow0: 'rgba(255, 255, 255, 0.75)', glow1: 'rgba(190, 215, 220, 0.35)', glow2: 'rgba(190, 215, 220, 0)',
+      body0: '#D7E7EA', body1: '#AFCBD1', body2: '#8FB2BA',
+      grat: 'rgba(23, 35, 29, 0.10)', gratCity: 'rgba(23, 35, 29, 0.12)', gratMajor: 'rgba(45, 90, 67, 0.32)',
+      dots: ['rgba(45, 90, 67, 0.35)', 'rgba(45, 90, 67, 0.62)', 'rgba(34, 72, 52, 0.92)'], round: true,
+      cityGlow0: 'rgba(255, 255, 255, 0.4)', cityGlow1: 'rgba(255, 255, 255, 0)',
+      rim: 'rgba(45, 90, 67, 0.3)', rimGlow: 'rgba(23, 35, 29, 0.15)', glowBlur: 8,
+      labelBg: 'rgba(247, 250, 248, 0.95)', labelStroke: 'rgba(23, 35, 29, 0.18)', labelFg: '#17231D',
+      cpin: '#B4551A', cpinRgb: '180, 85, 26',
+      spot: '#2D5A43', spotFill: 'rgba(247, 250, 248, 0.96)', spotText: '#2D5A43', spotTextOn: '#FFFFFF',
+      ring: '#2D5A43', ringText: '#1C3B2C',
+      ppin: '#D2462B', ppinHover: '#E2694F', ppinOpen: '#2D5A43', ppinEdge: 'rgba(23, 35, 29, 0.35)', ppinInner: '#FFFFFF', ppinText: '#17231D',
+      monoFont11: "500 11px 'IBM Plex Mono', monospace", monoFont12: "500 12px 'IBM Plex Mono', monospace", monoFont13: "500 13px 'IBM Plex Mono', monospace",
+      nameFont: "600 13px Karla, sans-serif",
+      contour: 'rgba(122, 92, 54, 0.26)', contourIndex: 'rgba(122, 92, 54, 0.5)', contourLabel: '#6B4F2C', contourHalo: 'rgba(214, 228, 230, 0.9)', monoFont10: "500 10px 'IBM Plex Mono', monospace",
+      border: 'rgba(52, 70, 60, 0.6)', borderHalo: 'rgba(255, 255, 255, 0.7)', coast: 'rgba(45, 90, 67, 0.45)',
+      live: '#1E9E68', liveRgb: '30, 158, 104', upcoming: '#2F6FA3',
+      visitedFill: 'rgba(45, 90, 67, 0.12)', selectedFill: 'rgba(180, 85, 26, 0.10)',
+      uiOnBg: '#2D5A43', uiOnFg: '#FFFFFF', uiText: '#17231D', uiMuted: '#4F6158', uiLine: '#C3D0CA', uiCard: '#F6F9F7'
+    };
+  }
+  trips() {
+    // Planned trips: dates are inclusive. The globe shows "here now" automatically between start and end.
+    return [
+      { id: 'lofoten', name: 'Lofoten, Norway', lat: 68.2, lon: 13.9, start: '2026-10-05', end: '2026-10-16' },
+      { id: 'queenstown', name: 'Queenstown, New Zealand', lat: -45.03, lon: 168.66, start: '2027-01-12', end: '2027-01-26' },
+      { id: 'atlas', name: 'Atlas Mountains, Morocco', lat: 31.06, lon: -7.92, start: '2027-04-08', end: '2027-04-18' }
+    ];
+  }
+  tripStatus() {
+    var now = new Date(), today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    var pd = function (str) { var a = str.split('-'); return new Date(+a[0], +a[1] - 1, +a[2]).getTime(); };
+    var mo = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var fmtD = function (t) { var d = new Date(t); return mo[d.getMonth()] + ' ' + d.getDate(); };
+    var live = null, up = [];
+    this.trips().forEach(function (t) {
+      var a = pd(t.start), b = pd(t.end);
+      var x = { id: t.id, name: t.name, lat: t.lat, lon: t.lon, startText: fmtD(a), endText: fmtD(b), days: Math.round((a - today) / 86400000), year: new Date(a).getFullYear() };
+      if (today >= a && today <= b) live = x; else if (a > today) up.push(x);
+    });
+    up.sort(function (p, q) { return p.days - q.days; });
+    return { live: live, up: up };
+  }
+  flyToPoint(lat, lon) {
+    this.setState({ country: null, place: null, lightbox: null });
+    this.cur = { c: null, p: null };
+    var d = ((lon - this.lon0) % 360 + 540) % 360 - 180;
+    this.spin = false; this.cityT0 = null;
+    this.anim = { t0: null, dur: 1800, lon: this.lon0, lat: this.lat0, z: this.z, dLon: d, tLat: Math.max(-60, Math.min(60, lat)), tZ: 1.7, big: false, via: null };
+  }
+  findSel(cid, pid) {
+    var c = null, p = null;
+    this.db().countries.forEach(function (x) { if (x.id === cid) c = x; });
+    if (c) c.places.forEach(function (x) { if (x.id === pid) p = x; });
+    return { c: c, p: p };
+  }
+
+  componentDidMount() {
+    var self = this;
+    this.lon0 = -40; this.lat0 = 18; this.z = 1;
+    this.spin = true; this.anim = null; this.drag = null; this.hits = []; this.cur = { c: null, p: null };
+    fetch('/_blob/a2c5ffbd9392a8a5b819782505471731').then(function (r) { return r.json(); }).then(function (g) { self.geo = g; }).catch(function () {});
+    fetch('/_blob/f414ca25f6db1f234f6a9cea7e1dbd33').then(function (r) { return r.json(); }).then(function (a) { self.land = self.prep(a, null); }).catch(function () {});
+    fetch('/_blob/8e07a4f5ede1b3afe726205ba7910046').then(function (r) { return r.json(); }).then(function (o) {
+      var d = {};
+      Object.keys(o).forEach(function (k) { d[k] = self.prep(o[k].p, o[k]); });
+      self.detail = d;
+    }).catch(function () {});
+    var tick = function (t) {
+      if (self.dead) return;
+      self.step(t);
+      self.draw(t);
+      self.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+  }
+  componentWillUnmount() { this.dead = true; if (this.raf) cancelAnimationFrame(this.raf); }
+
+  prep(a, meta) {
+    var n = a.length / 2, sp = new Float32Array(n), cp = new Float32Array(n), lam = new Float32Array(n), R = Math.PI / 180;
+    for (var i = 0; i < n; i++) {
+      var la = a[2 * i] * R; sp[i] = Math.sin(la); cp[i] = Math.cos(la); lam[i] = a[2 * i + 1] * R;
+    }
+    return { n: n, sp: sp, cp: cp, lam: lam, s: meta ? meta.s : 0.7, b: meta ? meta.b : null };
+  }
+
+  flyTo(cid, pid) {
+    var prev = this.cur || { c: null, p: null };
+    this.cur = { c: cid, p: pid };
+    var sel = this.findSel(cid, pid), c = sel.c, p = sel.p;
+    var tLon, tLat, tZ, dur, bigSpin = false, via = null;
+    if (!c) { tLon = this.lon0 - 25; tLat = 18; tZ = 1; dur = 1500; }
+    else if (p) {
+      tLon = p.lon; tLat = p.lat;
+      tZ = 0.3 / (p.r * (Math.PI / 180) * 0.38);
+      bigSpin = prev.c !== cid;
+      if (prev.p && prev.p !== pid) via = c.z;
+      dur = bigSpin ? 3000 : 1900;
+    } else {
+      tLon = c.lon; tLat = c.lat; tZ = c.z;
+      bigSpin = prev.c !== cid;
+      dur = bigSpin ? 2400 : 1300;
+    }
+    var d = ((tLon - this.lon0) % 360 + 540) % 360 - 180;
+    if (bigSpin) d += (d >= 0 ? 360 : -360);
+    this.spin = !c;
+    this.cityT0 = null;
+    this.anim = { t0: null, dur: dur, lon: this.lon0, lat: this.lat0, z: this.z, dLon: d, tLat: tLat, tZ: tZ, big: bigSpin, via: via };
+  }
+
+  step(t) {
+    var a = this.anim;
+    if (a) {
+      if (a.t0 == null) a.t0 = t;
+      var u = Math.min(1, (t - a.t0) / a.dur);
+      var ease = function (v) { return v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2; };
+      var e = ease(u), deep = a.tZ > 40 || a.z > 40;
+      var zoomingOut = deep && a.tZ < a.z && !a.via;
+      var ep = a.via ? ease(Math.min(1, Math.max(0, (u - 0.15) / 0.7))) : zoomingOut ? ease(Math.max(0, (u - 0.3) / 0.7)) : (deep ? ease(Math.min(1, u * 1.7)) : e);
+      this.lon0 = a.lon + a.dLon * ep;
+      this.lat0 = a.lat + (a.tLat - a.lat) * ep;
+      var lz;
+      if (a.via) {
+        lz = u < 0.5 ? Math.log(a.z) + (Math.log(a.via) - Math.log(a.z)) * ease(u * 2)
+                     : Math.log(a.via) + (Math.log(a.tZ) - Math.log(a.via)) * ease(u * 2 - 1);
+      } else if (deep && a.tZ > a.z) {
+        var ez = ease(Math.max(0, (u - 0.25) / 0.75));
+        lz = Math.log(a.z) + (Math.log(a.tZ) - Math.log(a.z)) * ez;
+      } else if (zoomingOut) {
+        lz = Math.log(a.z) + (Math.log(a.tZ) - Math.log(a.z)) * ease(Math.min(1, u * 1.5));
+      } else {
+        lz = Math.log(a.z) + (Math.log(a.tZ) - Math.log(a.z)) * e;
+      }
+      var dip = a.big ? (1 - 0.45 * Math.sin(Math.PI * Math.min(1, u * 1.6))) : 1;
+      this.z = Math.exp(lz) * dip;
+      if (u >= 1) { this.z = a.tZ; this.anim = null; }
+    } else if (this.spin && !this.drag) {
+      this.lon0 += 0.07;
+    }
+  }
+
+  draw(t) {
+    var cv = this.cv || document.querySelector('canvas[data-globe]');
+    if (!cv) return;
+    this.cv = cv;
+    var w = cv.clientWidth, h = cv.clientHeight;
+    if (!w || !h) return;
+    var dpr = Math.min(2, window.devicePixelRatio || 1);
+    if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+    var ctx = cv.getContext('2d'), T = this.theme();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+    var RAD = Math.PI / 180;
+    var cx = w / 2, cy = h * 0.47, R = Math.min(w, h) * 0.38 * this.z;
+    var lam0 = this.lon0 * RAD, ph0 = this.lat0 * RAD, s0 = Math.sin(ph0), c0 = Math.cos(ph0);
+    var ppd = R * RAD;
+
+    var glow = ctx.createRadialGradient(cx, cy, R * 0.92, cx, cy, R * 1.28);
+    glow.addColorStop(0, T.glow0);
+    glow.addColorStop(0.35, T.glow1);
+    glow.addColorStop(1, T.glow2);
+    ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, R * 1.28, 0, Math.PI * 2); ctx.fill();
+
+    var body = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R);
+    body.addColorStop(0, T.body0); body.addColorStop(0.7, T.body1); body.addColorStop(1, T.body2);
+    ctx.fillStyle = body; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.clip();
+    var G = this.geo, zz = this.z;
+    var selNow = this.findSel(this.cur ? this.cur.c : null, this.cur ? this.cur.p : null);
+    var vHalf = Math.max(w, h) / ppd * 0.8, view = zz > 2.2 ? { a: this.lat0 - vHalf, b: this.lat0 + vHalf, c: this.lon0 - vHalf / Math.max(0.2, Math.cos(this.lat0 * RAD)), d: this.lon0 + vHalf / Math.max(0.2, Math.cos(this.lat0 * RAD)) } : null;
+    var culled = function (bb) { return view && (bb[1] < view.a || bb[0] > view.b || bb[3] < view.c || bb[2] > view.d); };
+    var addLine = function (P, p, mid) {
+      var on = false, n2 = p.length, mi = mid ? ((n2 >> 2) << 1) : -1, at = null;
+      for (var j = 0; j < n2; j += 2) {
+        var ph = p[j] * RAD, l = p[j + 1] * RAD - lam0, cp = Math.cos(ph), sp = Math.sin(ph), cl = Math.cos(l);
+        var cc = s0 * sp + c0 * cp * cl;
+        if (cc <= 0) { on = false; continue; }
+        var x = cx + R * cp * Math.sin(l), y = cy - R * (c0 * sp - s0 * cp * cl);
+        if (on) P.lineTo(x, y); else P.moveTo(x, y);
+        on = true;
+        if (j === mi) at = { x: x, y: y };
+      }
+      return at;
+    };
+    if (G && G.fills) {
+      Object.keys(G.fills).forEach(function (cid) {
+        var P = new Path2D(), any = false;
+        G.fills[cid].forEach(function (ring) {
+          for (var j = 0; j < ring.length; j += 2) {
+            var ph = ring[j] * RAD, l = ring[j + 1] * RAD - lam0;
+            if (s0 * Math.sin(ph) + c0 * Math.cos(ph) * Math.cos(l) <= 0) return;
+          }
+          addLine(P, ring, false); P.closePath(); any = true;
+        });
+        if (any) { ctx.fillStyle = (selNow.c && selNow.c.id === cid) ? T.selectedFill : T.visitedFill; ctx.fill(P); }
+      });
+    }
+    ctx.strokeStyle = T.grat; ctx.lineWidth = 1;
+    var proj = function (la, lo) {
+      var p = la * RAD, l = lo * RAD - lam0, cp = Math.cos(p), sp = Math.sin(p), cl = Math.cos(l);
+      var cc = s0 * sp + c0 * cp * cl;
+      return { v: cc, x: cx + R * cp * Math.sin(l), y: cy - R * (c0 * sp - s0 * cp * cl) };
+    };
+    var line = function (pts) {
+      var on = false;
+      ctx.beginPath();
+      for (var i = 0; i < pts.length; i++) { var q = pts[i]; if (q.v > 0) { if (on) ctx.lineTo(q.x, q.y); else ctx.moveTo(q.x, q.y); on = true; } else on = false; }
+      ctx.stroke();
+    };
+    var la, lo, arr, k2;
+    if (this.z < 20) {
+      var step = this.z > 4 ? 5 : 15;
+      for (la = -75; la <= 75; la += step) { arr = []; for (lo = -180; lo <= 180; lo += 2) arr.push(proj(la, lo)); line(arr); }
+      for (lo = -180; lo < 180; lo += step) { arr = []; for (la = -88; la <= 88; la += 2) arr.push(proj(la, lo)); line(arr); }
+    } else {
+      var steps = [5, 1, 0.5, 0.1, 0.05, 0.01, 0.005, 0.002], gs = steps[steps.length - 1];
+      for (k2 = 0; k2 < steps.length; k2++) { if (steps[k2] * ppd < 70) { gs = steps[k2]; break; } }
+      var halfLa = Math.max(w, h) / ppd, halfLo = halfLa / Math.max(0.2, Math.cos(this.lat0 * RAD));
+      var la1 = Math.floor((this.lat0 - halfLa) / gs) * gs, lo1 = Math.floor((this.lon0 - halfLo) / gs) * gs;
+      var nLa = Math.ceil(2 * halfLa / gs) + 1, nLo = Math.ceil(2 * halfLo / gs) + 1, j;
+      var major = function (v) { var m = v / (gs * 5); return Math.abs(m - Math.round(m)) < 1e-6; };
+      for (j = 0; j <= nLa; j++) {
+        la = la1 + j * gs; arr = [];
+        for (k2 = 0; k2 <= 24; k2++) arr.push(proj(la, this.lon0 - halfLo + (2 * halfLo) * k2 / 24));
+        ctx.strokeStyle = major(la) ? T.gratMajor : T.gratCity;
+        line(arr);
+      }
+      for (j = 0; j <= nLo; j++) {
+        lo = lo1 + j * gs; arr = [];
+        for (k2 = 0; k2 <= 24; k2++) arr.push(proj(this.lat0 - halfLa + (2 * halfLa) * k2 / 24, lo));
+        ctx.strokeStyle = major(lo) ? T.gratMajor : T.gratCity;
+        line(arr);
+      }
+    }
+
+    var sel = this.findSel(this.cur ? this.cur.c : null, this.cur ? this.cur.p : null);
+    var det = (sel.c && this.detail && this.z > 2.2) ? this.detail[sel.c.id] : null;
+    var self = this;
+    var dots = function (D, skipBox) {
+      var raw = D.s * ppd * 0.46;
+      if (raw > 60) return;
+      ctx.globalAlpha = raw > 14 ? 1 - (raw - 14) / 46 : 1;
+      var size = Math.max(1.1, Math.min(18, raw));
+      var cols = T.dots;
+      for (var pass = 0; pass < 3; pass++) {
+        ctx.fillStyle = cols[pass];
+        ctx.beginPath();
+        for (var i = 0; i < D.n; i++) {
+          var l = D.lam[i] - lam0, cl = Math.cos(l), cc = s0 * D.sp[i] + c0 * D.cp[i] * cl;
+          if (cc <= 0) continue;
+          var bucket = cc < 0.35 ? 0 : (cc < 0.7 ? 1 : 2);
+          if (bucket !== pass) continue;
+          if (skipBox) {
+            var la2 = Math.asin(D.sp[i]) / RAD, lo2 = D.lam[i] / RAD;
+            if (la2 > skipBox[0] && la2 < skipBox[1] && lo2 > skipBox[2] && lo2 < skipBox[3]) continue;
+          }
+          var x = cx + R * D.cp[i] * Math.sin(l), y = cy - R * (c0 * D.sp[i] - s0 * D.cp[i] * cl);
+          if (x < -10 || x > w + 10 || y < -10 || y > h + 10) continue;
+          if (T.round) { ctx.moveTo(x + size / 2, y); ctx.arc(x, y, size / 2, 0, 6.2832); } else ctx.rect(x - size / 2, y - size / 2, size, size);
+        }
+        ctx.fill();
+      }
+    };
+    if (this.land) dots(this.land, det ? det.b : null);
+    if (det) dots(det, null);
+    ctx.globalAlpha = 1;
+    if (G) {
+      var cAlpha = selNow.c ? Math.max(0, Math.min(1, 1 - (zz - selNow.c.z * 10) / (selNow.c.z * 20))) : Math.min(1, 0.55 + (zz - 1) * 0.3);
+      var reg = (selNow.c && zz > 2.2 && G.reg[selNow.c.id]) ? G.reg[selNow.c.id] : null;
+      var set = reg ? reg.lines : G.world, istep = reg ? (reg.step >= 500 ? 1000 : reg.step * 5) : 2000;
+      if (cAlpha > 0.02) {
+        var Pm = new Path2D(), Pi = new Path2D(), labs = [];
+        for (var ci = 0; ci < set.length; ci++) {
+          var Lc = set[ci];
+          if (culled(Lc.bb)) continue;
+          var isIdx = Lc.e % istep === 0;
+          var at = addLine(isIdx ? Pi : Pm, Lc.p, isIdx && reg && Lc.p.length >= 20);
+          if (at && labs.length < 24 && at.x > 30 && at.x < w - 30 && at.y > 30 && at.y < h - 30) labs.push({ x: at.x, y: at.y, e: Lc.e });
+        }
+        ctx.globalAlpha = cAlpha;
+        ctx.lineJoin = 'round';
+        ctx.strokeStyle = T.contour; ctx.lineWidth = 0.9; ctx.stroke(Pm);
+        ctx.strokeStyle = T.contourIndex; ctx.lineWidth = 1.4; ctx.stroke(Pi);
+        if (zz < (selNow.c ? selNow.c.z * 4 : 0)) {
+          ctx.font = T.monoFont10; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.lineWidth = 3; ctx.strokeStyle = T.contourHalo; ctx.fillStyle = T.contourLabel;
+          labs.forEach(function (lb) { var tx = lb.e + ' m'; ctx.strokeText(tx, lb.x, lb.y); ctx.fillText(tx, lb.x, lb.y); });
+        }
+        ctx.globalAlpha = 1;
+      }
+      var bAlpha = Math.min(1, 0.45 + (zz - 1) * 0.35);
+      var Pc = new Path2D(), Pb = new Path2D();
+      G.coast.forEach(function (L) { if (!culled(L.bb)) addLine(Pc, L.p, false); });
+      G.borders.forEach(function (L) { if (!culled(L.bb)) addLine(Pb, L.p, false); });
+      ctx.globalAlpha = bAlpha;
+      ctx.strokeStyle = T.coast; ctx.lineWidth = 1; ctx.stroke(Pc);
+      ctx.strokeStyle = T.borderHalo; ctx.lineWidth = zz > 2.2 ? 4 : 2.5; ctx.stroke(Pb);
+      ctx.setLineDash([6, 3, 1.5, 3]); ctx.strokeStyle = T.border; ctx.lineWidth = zz > 2.2 ? 1.4 : 0.9; ctx.stroke(Pb); ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+    }
+    if (sel.p && this.z > 60) {
+      var cg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.6);
+      cg.addColorStop(0, T.cityGlow0); cg.addColorStop(1, T.cityGlow1);
+      ctx.fillStyle = cg; ctx.fillRect(0, 0, w, h);
+    }
+    ctx.restore();
+
+    ctx.save();
+    ctx.strokeStyle = T.rim; ctx.lineWidth = 1.5; ctx.shadowColor = T.rimGlow; ctx.shadowBlur = T.glowBlur;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.restore();
+
+    var hits = [], pulse = 0.5 + 0.5 * Math.sin(t / 380);
+    var db = this.db();
+    var label = function (txt, x, y, font, fg, align) {
+      ctx.font = font;
+      var tw = ctx.measureText(txt).width, bx = align === 'right' ? x - tw - 10 : x, by = y - 11;
+      ctx.fillStyle = T.labelBg; ctx.fillRect(bx - 4, by - 2, tw + 14, 24);
+      ctx.strokeStyle = T.labelStroke; ctx.lineWidth = 1; ctx.strokeRect(bx - 4 + 0.5, by - 2 + 0.5, tw + 13, 23);
+      ctx.fillStyle = fg; ctx.textBaseline = 'middle'; ctx.textAlign = 'left'; ctx.fillText(txt, bx + 3, y + 1);
+      return { x: bx - 4, y: by - 2, w: tw + 14, h: 24 };
+    };
+    if (!sel.c) {
+      db.countries.forEach(function (c) {
+        var q = proj(c.lat, c.lon);
+        if (q.v < 0.18) return;
+        ctx.save();
+        ctx.globalAlpha = Math.min(1, (q.v - 0.18) * 4);
+        ctx.strokeStyle = 'rgba(' + T.cpinRgb + ', ' + (0.25 + 0.35 * pulse) + ')'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(q.x, q.y, 9 + 5 * pulse, 0, Math.PI * 2); ctx.stroke();
+        ctx.shadowColor = T.cpin; ctx.shadowBlur = T.glowBlur * 0.8; ctx.fillStyle = T.cpin;
+        ctx.beginPath(); ctx.arc(q.x, q.y, 5.5, 0, Math.PI * 2); ctx.fill();
+        ctx.shadowBlur = 0;
+        var r = c.left ? label(c.name.toUpperCase() + '  ' + c.count, q.x - 16, q.y, T.monoFont12, T.labelFg, 'right')
+                       : label(c.name.toUpperCase() + '  ' + c.count, q.x + 16, q.y, T.monoFont12, T.labelFg, 'left');
+        ctx.restore();
+        hits.push({ x: q.x, y: q.y, r: 22, box: r, act: self.go(c.id, null) });
+      });
+    } else if (this.z > sel.c.z * 0.55) {
+      var a = Math.min(1, (this.z - sel.c.z * 0.55) / (sel.c.z * 0.3));
+      if (this.z > sel.c.z * 3) a = Math.max(0, a * (1 - (this.z - sel.c.z * 3) / (sel.c.z * 3)));
+      if (a > 0.01) sel.c.places.forEach(function (p) {
+        var q = proj(p.lat, p.lon);
+        if (q.v < 0.1) return;
+        var on = sel.p && sel.p.id === p.id;
+        ctx.save(); ctx.globalAlpha = a;
+        ctx.shadowColor = T.spot; ctx.shadowBlur = T.glowBlur * (on ? 1.4 : 0.8);
+        ctx.fillStyle = on ? T.spot : T.spotFill;
+        ctx.beginPath(); ctx.arc(q.x, q.y, 19, 0, Math.PI * 2); ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = T.spot; ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = on ? T.spotTextOn : T.spotText; ctx.font = T.monoFont13; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(p.n), q.x, q.y + 1);
+        ctx.font = T.nameFont;
+        var tw = ctx.measureText(p.name).width;
+        var r = label(p.name, q.x - tw / 2 - 3, q.y + 36, T.nameFont, T.labelFg, 'left');
+        ctx.restore();
+        hits.push({ x: q.x, y: q.y, r: 22, box: r, act: self.go(sel.c.id, p.id) });
+      });
+    }
+    if (sel.p && this.z > sel.c.z * 8) {
+      var pz = 0.3 / (sel.p.r * RAD * 0.38);
+      var ca = Math.min(1, Math.max(0, (Math.log(this.z) - Math.log(sel.c.z * 8)) / (Math.log(pz) - Math.log(sel.c.z * 8))));
+      if (this.cityT0 == null && ca > 0.85) this.cityT0 = t;
+      var st = this.state || {}, openIdx = (st.lightbox != null) ? st.lightbox : -1, hov = this.hover;
+      var cq = proj(sel.p.lat, sel.p.lon), ringR = sel.p.r * 1.25 * ppd;
+      ctx.save();
+      ctx.globalAlpha = ca * 0.7;
+      ctx.setLineDash([6, 8]); ctx.lineWidth = 1.5; ctx.strokeStyle = T.ring;
+      ctx.beginPath(); ctx.arc(cq.x, cq.y, ringR, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.font = T.monoFont11; ctx.fillStyle = T.ringText; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(sel.p.name.toUpperCase() + ' · ' + sel.p.n + ' PHOTOS', cq.x, cq.y - ringR - 8);
+      ctx.restore();
+      var self2 = this;
+      sel.p.photos.forEach(function (ph, i) {
+        var q = proj(ph.lat, ph.lon);
+        var since = self2.cityT0 == null ? 0 : (t - self2.cityT0 - i * 90) / 420;
+        var u = Math.max(0, Math.min(1, since));
+        if (u <= 0) return;
+        var bounce = 1 - Math.pow(1 - u, 3);
+        var x = q.x, y = q.y - (1 - bounce) * 60;
+        var isOpen = i === openIdx, isHov = hov === 'ph' + i;
+        var head = 13 + (isHov || isOpen ? 3 : 0), d = head * 2.1, hy = y - d;
+        ctx.save();
+        ctx.globalAlpha = u;
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.beginPath(); ctx.ellipse(q.x, q.y + 1, 7 * bounce, 2.5 * bounce, 0, 0, Math.PI * 2); ctx.fill();
+        var col = isOpen ? T.ppinOpen : (isHov ? T.ppinHover : T.ppin);
+        ctx.shadowColor = col; ctx.shadowBlur = T.glowBlur;
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.arc(x, hy, head, Math.PI * 5 / 6, Math.PI / 6);
+        ctx.closePath();
+        ctx.fillStyle = col; ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.lineWidth = 1.5; ctx.strokeStyle = T.ppinEdge; ctx.stroke();
+        ctx.fillStyle = T.ppinInner;
+        ctx.beginPath(); ctx.arc(x, hy, head * 0.62, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = isOpen ? T.ppinOpen : T.ppinText; ctx.font = T.monoFont11; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(String(i + 1), x, hy + 1);
+        if (isHov) {
+          var r = label('PHOTO ' + (i + 1) + '  ' + ph.coord, x + head + 8, hy, T.monoFont11, T.labelFg, 'left');
+        }
+        ctx.restore();
+        hits.push({ id: 'ph' + i, x: x, y: hy, r: head + 6, box: null, act: function () { self2.setState({ lightbox: i }); } });
+      });
+    }
+    var TS = this.tripStatus(), selfT = this;
+    var tripMark = function (tr, isLive) {
+      var q = proj(tr.lat, tr.lon);
+      if (q.v < 0.12) return;
+      ctx.save();
+      ctx.globalAlpha = Math.min(1, (q.v - 0.12) * 5);
+      if (isLive) {
+        for (var k = 0; k < 2; k++) {
+          var ph = ((t / 1800) + k * 0.5) % 1;
+          ctx.strokeStyle = 'rgba(' + T.liveRgb + ', ' + (0.55 * (1 - ph)) + ')'; ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.arc(q.x, q.y, 7 + 26 * ph, 0, Math.PI * 2); ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(' + T.liveRgb + ', 0.18)'; ctx.beginPath(); ctx.arc(q.x, q.y, 12, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = T.live; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(q.x, q.y, 7, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+      } else {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'; ctx.strokeStyle = T.upcoming; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(q.x, q.y, 6.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        ctx.setLineDash([3, 3]); ctx.lineWidth = 1.2;
+        ctx.beginPath(); ctx.arc(q.x, q.y, 12, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+      }
+      var txt = isLive ? ('HERE NOW · ' + tr.name.split(',')[0].toUpperCase()) : (tr.startText.toUpperCase() + ' · ' + tr.name.split(',')[0].toUpperCase());
+      var r = label(txt, q.x + 18, q.y, T.monoFont11, isLive ? T.live : T.upcoming, 'left');
+      ctx.restore();
+      hits.push({ x: q.x, y: q.y, r: 20, box: r, act: function () { selfT.flyToPoint(tr.lat, tr.lon); } });
+    };
+    TS.up.forEach(function (tr) { tripMark(tr, false); });
+    if (TS.live) tripMark(TS.live, true);
+    this.hits = hits;
+  }
+
+  hitAt(x, y) {
+    var hs = this.hits || [];
+    for (var i = hs.length - 1; i >= 0; i--) {
+      var hh = hs[i], dx = x - hh.x, dy = y - hh.y;
+      if (dx * dx + dy * dy <= hh.r * hh.r) return hh;
+      var b = hh.box;
+      if (b && x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h) return hh;
+    }
+    return null;
+  }
+
+  go(cid, pid) {
+    var self = this;
+    return function () {
+      self.setState({ country: cid, place: pid || null, lightbox: null });
+      self.flyTo(cid, pid || null);
+    };
+  }
+
+  handlers() {
+    if (this._h) return this._h;
+    var self = this;
+    var local = function (e) { var r = e.currentTarget.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+    this._h = {
+      setCanvas: function (el) { if (el) self.cv = el; },
+      onDown: function (e) {
+        var p = local(e);
+        self.drag = { x: p.x, y: p.y, lon: self.lon0, lat: self.lat0, moved: false };
+        try { e.currentTarget.setPointerCapture(e.pointerId); } catch (err) {}
+        e.currentTarget.style.cursor = 'grabbing';
+      },
+      onMove: function (e) {
+        var p = local(e);
+        if (!self.drag) { var hv = self.hitAt(p.x, p.y); self.hover = hv && hv.id ? hv.id : null; e.currentTarget.style.cursor = hv ? 'pointer' : 'grab'; return; }
+        var dx = p.x - self.drag.x, dy = p.y - self.drag.y;
+        if (!self.drag.moved && dx * dx + dy * dy > 16) { self.drag.moved = true; self.anim = null; }
+        if (!self.drag.moved) return;
+        var cv = e.currentTarget, R = Math.min(cv.clientWidth, cv.clientHeight) * 0.38 * self.z;
+        var k = 180 / (Math.PI * R);
+        self.lon0 = self.drag.lon - dx * k;
+        self.lat0 = Math.max(-80, Math.min(80, self.drag.lat + dy * k));
+      },
+      onUp: function (e) {
+        var d = self.drag, p = local(e);
+        self.drag = null;
+        e.currentTarget.style.cursor = 'grab';
+        if (d && !d.moved) { var hh = self.hitAt(p.x, p.y); if (hh) hh.act(); }
+      },
+      onLeave: function () { self.hover = null; if (self.drag && !self.drag.moved) self.drag = null; }
+    };
+    return this._h;
+  }
+
+  renderVals() {
+    var s = this.state || {}, self = this, d = this.db(), countries = d.countries, H = this.handlers(), T = this.theme(), TSr = this.tripStatus();
+    var sel = this.findSel(s.country, s.place), c = sel.c, place = sel.p;
+    var photos = place ? place.photos : (c ? c.photos : []);
+    var n = photos.length;
+    var tiles = photos.map(function (ph, i) {
+      return { place: ph.place, coord: ph.coord, tone: ph.tone, aspect: ph.aspect, label: ph.label, open: function () { self.setState({ lightbox: i }); } };
+    });
+    var pill = function (on) { return { bg: on ? T.uiOnBg : 'transparent', fg: on ? T.uiOnFg : T.uiText, border: on ? T.uiOnBg : T.uiLine, pressed: on ? 'true' : 'false' }; };
+    var chips = [], spots = [];
+    if (c) {
+      var a0 = pill(!place);
+      chips.push({ name: 'All', count: c.count, pressed: a0.pressed, bg: a0.bg, fg: a0.fg, border: a0.border, open: this.go(c.id, null) });
+      c.places.forEach(function (p) {
+        var st = pill(place && place.id === p.id);
+        chips.push({ name: p.name, count: p.n, pressed: st.pressed, bg: st.bg, fg: st.fg, border: st.border, open: self.go(c.id, p.id) });
+        var sp = place && place.id === p.id;
+        spots.push({ name: p.name, count: p.n + ' photos', pressed: sp ? 'true' : 'false', bg: sp ? T.uiOnBg : T.uiCard, fg: sp ? T.uiOnFg : T.uiText, border: sp ? T.uiOnBg : T.uiLine, open: self.go(c.id, p.id) });
+      });
+    }
+    var dests = countries.map(function (x) { return { name: x.name, count: x.count + ' ph', coord: self.fmt(x.lat, x.lon), open: self.go(x.id, null) }; });
+    var cards = countries.map(function (x) {
+      return { name: x.name, meta: x.places.length + ' spots · ' + x.count + ' photos', tone: x.tones[0], tone2: x.tones[1], tone3: x.tones[2], open: self.go(x.id, null) };
+    });
+    var lb = (s.lightbox != null && photos[s.lightbox]) ? photos[s.lightbox] : null;
+    return {
+      setCanvas: H.setCanvas, onDown: H.onDown, onMove: H.onMove, onUp: H.onUp, onLeave: H.onLeave,
+      tiles: tiles, chips: chips, cards: cards, dests: dests, spots: spots,
+      isWorld: !c, isCountry: !!c, hasPlace: !!place,
+      countryName: c ? c.name : '', placeName: place ? place.name : '',
+      countryCoord: c ? this.fmt(c.lat, c.lon) : '', countryPhotos: c ? c.count + ' photos' : '',
+      worldColor: c ? T.uiMuted : T.uiText, countryColor: place ? T.uiMuted : T.uiText,
+      coords: place ? this.fmt(place.lat, place.lon) : (c ? this.fmt(c.lat, c.lon) : ''),
+      galleryTitle: place ? place.name : (c ? c.name : ''),
+      galleryCount: n + ' photos',
+      mapHint: c ? (place ? 'Click a pin to open that photo' : 'Click a spot to zoom in') : 'Drag to spin · click a pin to fly in',
+      countryCount: countries.length, placeCount: d.places, totalPhotos: d.total,
+      isLive: !!TSr.live, live: TSr.live ? { name: TSr.live.name, endText: TSr.live.endText, show: function () { self.flyToPoint(TSr.live.lat, TSr.live.lon); } } : { name: '', endText: '', show: function () {} },
+      upcoming: TSr.up.map(function (u) { return { name: u.name, range: u.startText + ' – ' + u.endText + ', ' + u.year, countdown: u.days === 1 ? 'tomorrow' : 'in ' + u.days + ' days', show: function () { self.flyToPoint(u.lat, u.lon); } }; }),
+      goWorld: this.go(null, null), goCountry: c ? this.go(c.id, null) : function () {},
+      lbOpen: !!lb, lb: lb || {}, lbPos: lb ? (s.lightbox + 1) + ' / ' + n : '',
+      lbClose: function () { self.setState({ lightbox: null }); },
+      lbPrev: function () { self.setState({ lightbox: (s.lightbox - 1 + n) % n }); },
+      lbNext: function () { self.setState({ lightbox: (s.lightbox + 1) % n }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

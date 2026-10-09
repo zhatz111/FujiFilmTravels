@@ -1,0 +1,233 @@
+/* PhotoSwipe restyled to Alpine Morning (docs/03-design-system.md "Lightbox"). */
+.pswp {
+	--pswp-bg: var(--bg);
+	--pswp-placeholder-bg: var(--line);
+	--pswp-icon-color: var(--pine);
+	--pswp-icon-color-secondary: #fff;
+	--pswp-icon-stroke-color: #fff;
+	--pswp-icon-stroke-width: 0;
+	font-family: var(--font-body);
+	color: var(--ink);
+}
+.pswp__bg {
+	opacity: 0.97 !important;
+}
+.pswp__img {
+	box-shadow: var(--shadow-lightbox);
+	border-radius: 4px;
+}
+.pswp__counter {
+	display: none; /* position is shown in the sidebar */
+}
+
+/* round bordered buttons with centered icons (custom SVGs from Lightbox.ts) */
+.pswp__button--close,
+.pswp__button--arrow {
+	display: grid !important;
+	place-items: center;
+	width: 48px !important;
+	height: 48px !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	border-radius: 50% !important;
+	border: 1px solid var(--pine) !important;
+	background: var(--surface) !important;
+	opacity: 1 !important;
+}
+.pswp__button--close {
+	width: 44px !important;
+	height: 44px !important;
+	margin: 16px 16px 0 0 !important;
+	border-color: var(--sunrise) !important;
+}
+.pswp__button--arrow {
+	position: absolute;
+	top: 50% !important;
+	margin-top: -24px !important;
+	visibility: visible;
+}
+.pswp__button--arrow--prev {
+	left: 24px;
+}
+.pswp__button--arrow--next {
+	right: 404px; /* left of the 380px sidebar */
+}
+.pswp .pswp__button--close .pswp__icn,
+.pswp .pswp__button--arrow .pswp__icn {
+	position: static;
+	margin: 0;
+	width: 22px;
+	height: 22px;
+	fill: none;
+	stroke: var(--pine);
+	transform: none; /* PhotoSwipe mirrors the next arrow; ours is drawn facing right */
+}
+.pswp .pswp__button--close .pswp__icn {
+	stroke: var(--sunrise);
+}
+.pswp__button:hover {
+	background: var(--card) !important;
+}
+.pswp__button:focus-visible {
+	outline: 2px solid var(--pine);
+	outline-offset: 3px;
+}
+
+/* info sidebar: full-height column with a thin divider between photo and metadata */
+.pswp__info {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 380px;
+	padding: 88px 32px 32px;
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+	border-left: 1px solid var(--line);
+	overflow-y: auto;
+}
+/* clicks pass through the empty panel to the close button under its top padding
+   (beats PhotoSwipe's `.pswp--ui-visible .pswp__hide-on-close { pointer-events: auto }`) */
+.pswp--ui-visible .pswp__info.pswp__hide-on-close {
+	pointer-events: none;
+}
+.pswp__info > * {
+	pointer-events: auto;
+}
+.pswp-info__head {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+.pswp-info__pos {
+	font: 12px var(--font-mono);
+	color: var(--muted);
+}
+.pswp__info h3 {
+	font-size: 28px;
+}
+.pswp-info__country {
+	font-size: 15px;
+	color: var(--muted);
+}
+.pswp__info dl {
+	margin: 0;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 10px 16px;
+	font-size: 14px;
+}
+.pswp__info dt {
+	color: var(--muted);
+}
+.pswp__info dd {
+	margin: 0;
+	font: 12px/1.6 var(--font-mono);
+	overflow-wrap: anywhere;
+}
+.pswp__info dd.loc {
+	color: var(--pine);
+}
+.pswp-info__people {
+	padding-top: 16px;
+	border-top: 1px solid var(--line);
+}
+.pswp__info p {
+	margin: 0;
+	font-size: 15px;
+	line-height: 1.55;
+	color: var(--caption);
+}
+
+/* people tagged in the photo: button on the photo's bottom-left corner, list opens above it */
+.pswp__tags {
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 2;
+	pointer-events: auto;
+}
+.pswp-tags__btn {
+	position: absolute;
+	bottom: 0;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	height: 40px;
+	padding: 0 12px 0 10px;
+	border-radius: var(--radius-pill);
+	border: 1px solid rgba(23, 35, 29, 0.18);
+	background: var(--surface-glass);
+	font: 600 13px var(--font-body);
+	color: var(--ink);
+	cursor: pointer;
+}
+.pswp-tags__btn .pswp__icn {
+	position: static;
+	width: 20px;
+	height: 20px;
+	fill: none;
+	stroke: var(--pine);
+}
+.pswp-tags__btn[aria-expanded='true'] {
+	border-color: var(--pine);
+}
+.pswp-tags__list {
+	position: absolute;
+	bottom: 48px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	min-width: 160px;
+	margin: 0;
+	padding: 8px;
+	list-style: none;
+	border-radius: 10px;
+	border: 1px solid var(--line);
+	background: var(--card);
+	box-shadow: 0 10px 30px rgba(23, 35, 29, 0.12);
+	font: 600 14px var(--font-body);
+	white-space: nowrap;
+}
+.pswp-tags__list li {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+.pswp-tags__av {
+	display: grid;
+	place-items: center;
+	width: 26px;
+	height: 26px;
+	border-radius: 50%;
+	color: #fff;
+	font: 700 11px var(--font-body);
+}
+
+@media (max-width: 900px) {
+	/* phones: metadata sits under the photo, divided by a line on top */
+	.pswp__info {
+		top: auto;
+		left: 0;
+		width: auto;
+		max-height: 220px;
+		padding: 16px;
+		gap: 10px;
+		border-left: 0;
+		border-top: 1px solid var(--line);
+		background: var(--surface);
+	}
+	.pswp__info h3 {
+		font-size: 22px;
+	}
+	.pswp__info dl {
+		gap: 4px 12px;
+	}
+	.pswp-info__people {
+		padding-top: 10px;
+	}
+	.pswp__button--arrow {
+		display: none !important; /* swipe on touch */
+	}
+}

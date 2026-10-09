@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Where's Zach — Spot with people and trips</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=Karla:wght@400;500;600;700&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E7EDEA}
+a{color:#2D5A43}a:hover{color:#1C3B2C}
+button{font:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid #2D5A43;outline-offset:3px}
+</style>
+</helmet>
+<div style="min-height: 100vh; background: #E7EDEA; color: #17231D; font-family: Karla, 'Helvetica Neue', sans-serif">
+<div style="max-width: 1440px; margin: 0 auto; padding: 28px 32px 64px; box-sizing: border-box; display: flex; flex-direction: column; gap: 24px">
+
+<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<span style="font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 24px; color: #B4551A">where's zach</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #4F6158; letter-spacing: 0.1em; text-transform: uppercase">Spot view · simple filters</span>
+</header>
+
+<div role="search" aria-label="Filter the map and photos" style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; padding: 16px 20px; border-radius: 14px; border: 1px solid #C3D0CA; background: #F6F9F7">
+<label style="display: flex; flex-direction: column; gap: 6px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4F6158">Traveler
+<select value="{{whoVal}}" onChange="{{onWho}}" style="min-width: 200px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid #C3D0CA; background: #FFFFFF; color: #17231D; font-family: Karla, sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0; text-transform: none; cursor: pointer">
+<sc-for list="{{whoOpts}}" as="o" hint-placeholder-count="5"><option value="{{o.id}}">{{o.name}}</option></sc-for>
+</select>
+</label>
+<label style="display: flex; flex-direction: column; gap: 6px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #4F6158">Trip
+<select value="{{tripVal}}" onChange="{{onTrip}}" style="min-width: 240px; min-height: 44px; padding: 0 12px; border-radius: 10px; border: 1px solid #C3D0CA; background: #FFFFFF; color: #17231D; font-family: Karla, sans-serif; font-size: 16px; font-weight: 600; letter-spacing: 0; text-transform: none; cursor: pointer">
+<sc-for list="{{tripOpts}}" as="o" hint-placeholder-count="3"><option value="{{o.id}}">{{o.name}}</option></sc-for>
+</select>
+</label>
+<div style="display: flex; align-items: center; gap: 14px; min-height: 44px; margin-left: auto">
+<span aria-live="polite" style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 13px; color: #2D5A43">{{resultText}}</span>
+<sc-if value="{{filtered}}" hint-placeholder-val="{{ false }}">
+<button onClick="{{clear}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid #C3D0CA; background: transparent; color: #17231D; font-size: 14px; font-weight: 600; cursor: pointer">Clear filters</button>
+</sc-if>
+</div>
+</div>
+
+<section style="display: flex; flex-wrap: wrap; border-radius: 20px; overflow: hidden; border: 1px solid #C3D0CA; background: #F6F9F7; box-shadow: 0 10px 40px rgba(23, 35, 29, 0.08)">
+
+<div style="position: relative; flex: 999 1 620px; min-width: 0; height: 640px; overflow: hidden; background: #EEF2EC">
+<svg aria-hidden="true" viewBox="0 0 900 640" preserveAspectRatio="xMidYMid slice" style="position: absolute; inset: 0; width: 100%; height: 100%">
+<path d="M520 110 C 600 90, 690 130, 700 200 C 712 270, 640 300, 585 285 C 520 268, 470 210, 520 110 Z" fill="#F6F9F9" stroke="#D5DED9" stroke-width="1"></path>
+<path d="M610 330 C 650 318, 700 340, 690 375 C 680 405, 630 410, 605 390 C 585 372, 588 338, 610 330 Z" fill="#B9D2D7"></path>
+<path d="M0 560 C 160 540, 260 520, 380 470 C 470 432, 560 440, 900 470 L 900 640 L 0 640 Z" fill="#DCE6D6"></path>
+<path d="M140 600 C 220 560, 300 545, 360 500" fill="none" stroke="#B9D2D7" stroke-width="10" stroke-linecap="round"></path>
+<g fill="none" stroke="rgba(122, 92, 54, 0.26)" stroke-width="1">
+<path d="M430 160 C 470 70, 640 40, 740 110 C 820 170, 800 300, 700 340 C 600 380, 470 330, 430 160 Z"></path>
+<path d="M400 170 C 440 40, 660 10, 780 90 C 870 160, 840 330, 720 375 C 590 420, 430 360, 400 170 Z"></path>
+<path d="M465 165 C 500 100, 630 80, 705 135 C 760 180, 750 270, 680 300 C 600 330, 490 290, 465 165 Z"></path>
+<path d="M60 420 C 140 360, 260 380, 300 330 C 340 280, 300 200, 360 160"></path>
+<path d="M20 470 C 120 410, 250 430, 320 380 C 380 330, 350 230, 400 190"></path>
+</g>
+<g fill="none" stroke="rgba(122, 92, 54, 0.5)" stroke-width="1.4">
+<path d="M370 175 C 410 10, 690 -20, 810 70 C 910 150, 880 360, 740 410 C 590 460, 400 400, 370 175 Z"></path>
+</g>
+<path d="M150 590 C 200 540, 260 520, 320 470 C 380 420, 430 420, 480 400 C 540 375, 580 360, 620 350" fill="none" stroke="#9C7B52" stroke-width="2" stroke-dasharray="6 5"></path>
+<text x="166" y="618" font-family="IBM Plex Mono, monospace" font-size="11" fill="#4F6158">EL CHALTÉN</text>
+<text x="560" y="315" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6B4F2C">1500 m</text>
+<text x="612" y="415" font-family="Karla, sans-serif" font-size="12" font-style="italic" fill="#3F6F86">Laguna de los Tres</text>
+<text x="600" y="190" font-family="Karla, sans-serif" font-size="12" font-style="italic" fill="#4F6158">Fitz Roy</text>
+<circle cx="420" cy="420" r="230" fill="none" stroke="#2D5A43" stroke-width="1.5" stroke-dasharray="6 8" opacity="0.6"></circle>
+</svg>
+
+<sc-for list="{{pins}}" as="pin" hint-placeholder-count="8">
+<button onClick="{{pin.open}}" aria-label="{{pin.label}}" style="position: absolute; left: {{pin.x}}; top: {{pin.y}}; transform: translate(-50%, -100%); width: 32px; height: 44px; padding: 0; border: 0; background: none; cursor: pointer">
+<svg width="32" height="44" viewBox="0 0 32 44" aria-hidden="true"><path d="M16 43 L5 24 A13 13 0 1 1 27 24 Z" fill="{{pin.color}}" stroke="rgba(23, 35, 29, 0.35)" stroke-width="1.5"></path><circle cx="16" cy="15" r="8" fill="#FFFFFF"></circle><text x="16" y="19" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" font-weight="500" fill="#17231D">{{pin.n}}</text></svg>
+</button>
+</sc-for>
+
+<nav aria-label="Breadcrumb" style="position: absolute; left: 16px; top: 16px; display: flex; align-items: center; gap: 2px; padding: 4px 8px; border-radius: 10px; background: rgba(247, 250, 248, 0.94); border: 1px solid #C3D0CA; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em">
+<span style="padding: 10px 8px; color: #4F6158">World</span><span style="color: #8A9A92">/</span><span style="padding: 10px 8px; color: #4F6158">Argentina</span><span style="color: #8A9A92">/</span><span style="padding: 10px 8px; color: #17231D">El Chaltén</span>
+</nav>
+<div style="position: absolute; left: 16px; bottom: 16px; display: flex; flex-wrap: wrap; gap: 10px; padding: 10px 12px; border-radius: 10px; background: rgba(247, 250, 248, 0.94); border: 1px solid #C3D0CA; font-size: 12px">
+<sc-for list="{{legend}}" as="lg" hint-placeholder-count="3">
+<span style="display: flex; align-items: center; gap: 6px"><span style="width: 10px; height: 10px; border-radius: 50%; background: {{lg.color}}"></span>{{lg.name}}'s photos</span>
+</sc-for>
+</div>
+</div>
+
+<aside style="flex: 1 1 340px; min-width: 0; box-sizing: border-box; padding: 28px 24px; display: flex; flex-direction: column; gap: 22px; border-left: 1px solid #C3D0CA">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<h2 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 34px; color: #12201A">El Chaltén</h2>
+<span style="font-size: 15px; color: #4F6158">Argentina · {{summary}}</span>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #B4551A">{{tripsLabel}}</span>
+<sc-for list="{{tripCards}}" as="t" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: 10px; border: 1px solid #C3D0CA; background: #FFFFFF">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+<span style="font-size: 16px; font-weight: 700">{{t.date}}</span>
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #2D5A43">{{t.count}}</span>
+</div>
+<span style="font-size: 14px; color: #4F6158">{{t.label}}</span>
+<div style="display: flex; align-items: center; gap: 10px">
+<span style="display: flex; padding-left: 8px">
+<sc-for list="{{t.stack}}" as="a" hint-placeholder-count="3">
+<span style="width: 28px; height: 28px; margin-left: -8px; border-radius: 50%; background: {{a.color}}; border: 2px solid #FFFFFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700">{{a.initials}}</span>
+</sc-for>
+</span>
+<span style="font-size: 14px; color: #17231D">{{t.names}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+</aside>
+</section>
+
+<section aria-label="Gallery" style="display: flex; flex-direction: column; gap: 28px">
+<sc-for list="{{groups}}" as="g" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px; padding-bottom: 10px; border-bottom: 1px solid #C3D0CA">
+<h3 style="margin: 0; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 22px; color: #12201A">{{g.title}}</h3>
+<span style="font-size: 15px; color: #4F6158">{{g.sub}}</span>
+<span style="display: flex; padding-left: 8px">
+<sc-for list="{{g.stack}}" as="a" hint-placeholder-count="3">
+<span style="width: 24px; height: 24px; margin-left: -8px; border-radius: 50%; background: {{a.color}}; border: 2px solid #E7EDEA; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700">{{a.initials}}</span>
+</sc-for>
+</span>
+</div>
+<div style="columns: 4 220px; column-gap: 16px">
+<sc-for list="{{g.tiles}}" as="ph" hint-placeholder-count="4">
+<div style="display: block; width: 100%; margin: 0 0 16px; padding: 6px; box-sizing: border-box; border-radius: 10px; border: 1px solid #C3D0CA; background: #F6F9F7; break-inside: avoid">
+<div style="position: relative; width: 100%; aspect-ratio: {{ph.aspect}}; border-radius: 6px; background: {{ph.tone}}">
+<span style="position: absolute; left: 8px; bottom: 8px; width: 24px; height: 24px; border-radius: 50%; background: {{ph.color}}; border: 2px solid #FFFFFF; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700">{{ph.initials}}</span>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 8px; padding: 10px 4px 4px; font-size: 13px">
+<span style="font-weight: 600">Photo {{ph.n}}</span>
+<span style="color: #4F6158">by {{ph.by}}</span>
+</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-for>
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<p style="margin: 0; font-size: 16px; color: #4F6158">No photos match this filter.</p>
+</sc-if>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1500}}'>
+class Component extends DCLogic {
+  data() {
+    if (this._d) return this._d;
+    var P = {
+      zach: { id: 'zach', name: 'Zach', color: '#2D5A43', initials: 'Z' },
+      alex: { id: 'alex', name: 'Alex', color: '#B4551A', initials: 'A' },
+      sam: { id: 'sam', name: 'Sam', color: '#3F6F86', initials: 'S' },
+      dad: { id: 'dad', name: 'Dad', color: '#7A4E8C', initials: 'D' }
+    };
+    var V = [
+      { id: 'v2025', date: 'Mar 12 – 18, 2025', title: 'March 2025', label: 'Patagonia trip', people: ['zach', 'alex', 'sam'] },
+      { id: 'v2023', date: 'Jan 4 – 7, 2023', title: 'January 2023', label: 'Weekend from El Calafate', people: ['zach', 'dad'] }
+    ];
+    var pos = [[52, 66], [58, 58], [63, 54], [68, 50], [46, 72], [72, 47], [40, 78], [55, 62], [66, 44], [35, 82], [60, 70]];
+    var spec = [['v2025', 'zach'], ['v2025', 'alex'], ['v2025', 'zach'], ['v2025', 'alex'], ['v2025', 'sam'], ['v2025', 'zach'], ['v2025', 'alex'], ['v2025', 'zach'],
+                ['v2023', 'zach'], ['v2023', 'zach'], ['v2023', 'zach']];
+    var tones = ['#6F8A9A', '#B9A27A', '#4F6B5E', '#8C9DA6', '#7E8F7A', '#A88E6A'];
+    var aspects = ['4 / 5', '3 / 2', '1 / 1', '2 / 3', '16 / 9', '3 / 4'];
+    var photos = spec.map(function (s, i) { return { n: i + 1, visit: s[0], by: s[1], x: pos[i][0] + '%', y: pos[i][1] + '%', tone: tones[i % tones.length], aspect: aspects[i % aspects.length] }; });
+    this._d = { P: P, V: V, photos: photos };
+    return this._d;
+  }
+  renderVals() {
+    var s = this.state || {}, self = this, D = this.data(), P = D.P;
+    var who = s.who || 'everyone', trip = s.trip || 'all';
+    var tripsForWho = D.V.filter(function (v) { return who === 'everyone' || v.people.indexOf(who) >= 0; });
+    if (trip !== 'all' && !tripsForWho.some(function (v) { return v.id === trip; })) trip = 'all';
+    var trips = tripsForWho.filter(function (v) { return trip === 'all' || v.id === trip; });
+    var shown = D.photos.filter(function (ph) { return trips.some(function (v) { return v.id === ph.visit; }); });
+    var av = function (id) { return { color: P[id].color, initials: P[id].initials }; };
+    var names = function (ids) { var n = ids.map(function (x) { return P[x].name; }); return n.length > 1 ? n.slice(0, -1).join(', ') + ' & ' + n[n.length - 1] : (n[0] || ''); };
+
+    var whoOpts = [{ id: 'everyone', name: 'Everyone' }].concat(['zach', 'alex', 'sam', 'dad'].map(function (id) { return { id: id, name: P[id].name }; }));
+    var tripOpts = [{ id: 'all', name: 'All trips' }].concat(tripsForWho.map(function (v) { return { id: v.id, name: v.title + (v.label ? ' · ' + v.label : '') }; }));
+
+    var tripCards = trips.map(function (v) {
+      var n = D.photos.filter(function (ph) { return ph.visit === v.id; }).length;
+      return { date: v.date, label: v.label, count: n + ' photos', stack: v.people.map(av), names: names(v.people) };
+    });
+    var groups = trips.map(function (v) {
+      var tiles = shown.filter(function (ph) { return ph.visit === v.id; }).map(function (ph) {
+        return { n: ph.n, tone: ph.tone, aspect: ph.aspect, color: P[ph.by].color, initials: P[ph.by].initials, by: P[ph.by].name };
+      });
+      return { title: v.title, sub: v.label, stack: v.people.map(av), tiles: tiles };
+    }).filter(function (g) { return g.tiles.length; });
+    var pins = shown.map(function (ph) { return { x: ph.x, y: ph.y, n: ph.n, color: P[ph.by].color, label: 'Photo ' + ph.n + ' by ' + P[ph.by].name, open: function () {} }; });
+    var legend = [];
+    shown.forEach(function (ph) { if (!legend.some(function (l) { return l.id === ph.by; })) legend.push({ id: ph.by, name: P[ph.by].name, color: P[ph.by].color }); });
+    var filtered = who !== 'everyone' || trip !== 'all';
+    var summary = trips.length === 1 ? trips[0].date : trips.length + ' trips';
+
+    return {
+      whoVal: who, tripVal: trip, whoOpts: whoOpts, tripOpts: tripOpts,
+      onWho: function (e) { self.setState({ who: e.target.value, trip: 'all' }); },
+      onTrip: function (e) { self.setState({ who: s.who, trip: e.target.value }); },
+      clear: function () { self.setState({ who: 'everyone', trip: 'all' }); },
+      filtered: filtered,
+      resultText: shown.length + ' photos · ' + trips.length + (trips.length === 1 ? ' trip' : ' trips'),
+      tripsLabel: trips.length === 1 ? 'Trip' : 'Trips here',
+      tripCards: tripCards, summary: summary,
+      groups: groups, empty: groups.length === 0, pins: pins, legend: legend
+    };
+  }
+}
+</script>
+</body>
+</html>

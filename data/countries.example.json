@@ -1,0 +1,38 @@
+[
+  {
+    "id": "argentina",
+    "iso2": "AR",
+    "name": "Argentina",
+    "lat": -41.97,
+    "lon": -65.63,
+    "zoom": 3.6,
+    "count": 2,
+    "spots": [
+      "buenos-aires",
+      "el-chalten"
+    ],
+    "cover": [
+      "2025-03-14-a1b2c3d4e5",
+      "2025-03-09-f6e5d4c3b2"
+    ],
+    "last_visit": "2025-03-18",
+    "visits": [
+      {
+        "id": "argentina-2025-03",
+        "start": "2025-03-08",
+        "end": "2025-03-18",
+        "photos": 2,
+        "label": "Patagonia trip",
+        "companions": [
+          "zach",
+          "alex",
+          "sam"
+        ],
+        "photographers": [
+          "zach",
+          "alex"
+        ]
+      }
+    ]
+  }
+]

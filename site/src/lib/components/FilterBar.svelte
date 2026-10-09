@@ -1,17 +1,33 @@
 <script lang="ts">
-	// The one filtering UI (Phase 4.6): Traveler + Trip, applied to pins, panels, gallery, lightbox.
+	// The one filtering UI (Phase 4.6): Photographer (who took it) + Traveler (who is in it, from
+	// captions.toml tags) + Trip, applied together to pins, panels, gallery and lightbox.
 	import { longMonthYear } from '#lib/dates.ts';
-	import { people } from '#lib/data.ts';
 	import { plural } from '#lib/format.ts';
-	import { app } from '#lib/state.svelte.ts';
+	import { app, photographers, travelers } from '#lib/state.svelte.ts';
 </script>
 
 <div class="bar" role="search" aria-label="Filter the map and photos">
 	<label>
-		Traveler
-		<select value={app.nav.who ?? ''} onchange={(e) => app.setWho(e.currentTarget.value || null)}>
+		Photographer
+		<select value={app.nav.by ?? ''} onchange={(e) => app.setBy(e.currentTarget.value || null)}>
 			<option value="">Everyone</option>
-			{#each people as p (p.id)}
+			{#each photographers as p (p.id)}
+				<option value={p.id}>{p.name}</option>
+			{/each}
+		</select>
+	</label>
+	<label>
+		Traveler
+		<select
+			value={app.nav.who ?? ''}
+			onchange={(e) => app.setWho(e.currentTarget.value || null)}
+			disabled={!travelers.length}
+			title={travelers.length
+				? 'Photos this person is in'
+				: 'Tag people in captions.toml to filter by who is in a photo'}
+		>
+			<option value="">{travelers.length ? 'Anyone' : 'No one tagged yet'}</option>
+			{#each travelers as p (p.id)}
 				<option value={p.id}>{p.name}</option>
 			{/each}
 		</select>
@@ -71,8 +87,12 @@
 		text-transform: none;
 		cursor: pointer;
 	}
-	select:hover {
+	select:hover:not(:disabled) {
 		border-color: var(--muted);
+	}
+	select:disabled {
+		cursor: default;
+		opacity: 0.6;
 	}
 	/* native-menu browsers: a lighter chevron at night (base-select browsers use the mask below) */
 	@supports not (appearance: base-select) {

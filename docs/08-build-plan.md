@@ -134,6 +134,11 @@ Rules: only list people who've agreed to be on the site. Use first names or nick
 - Tests: a visit with photos from two photographers gets both as companions; a spot override narrows people; hidden people never appear in any output file.
 
 **One filter bar (the only filtering UI):**
+
+> **Implemented as three filters** (supersedes the two-dropdown description below): **Photographer**
+> (`by=`, photos that person took), **Traveler** (`who=`, photos that person is *tagged in* via
+> `people = [...]` in `photos/inbox/captions.toml`) and **Trip** (`trip=`). They combine per photo;
+> a trip stays listed while any of its photos pass. Changing Photographer or Traveler resets Trip.
 Keep filtering simple: one bar at the top of the globe section, and nothing else on the page filters. Panels and the gallery only display.
 
 - Two labeled dropdowns (native `<select>`, styled per `03-design-system.md`):

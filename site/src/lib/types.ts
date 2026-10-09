@@ -106,11 +106,14 @@ export type Trip = {
 	show_upcoming?: boolean;
 };
 
-/** URL-driven state: country, spot, open photo, Traveler filter, Trip filter. */
+/** URL-driven state: country, spot, open photo, and the Photographer / Traveler / Trip filters. */
 export type Nav = {
 	c: string | null;
 	s: string | null;
 	p: string | null;
+	/** Photographer filter: photos this person took */
+	by: string | null;
+	/** Traveler filter: photos this person is tagged in */
 	who: string | null;
 	trip: string | null;
 };

@@ -16,17 +16,39 @@ import {
 } from './data';
 import { liveTrip, upcomingTrips } from './trips';
 import type { Country, Level, Nav, Photo, Spot, Trip } from './types';
-import { EMPTY, levelOf, navToSearch, parseNav, sanitize, visitFilter, type Lookup } from './url';
+import {
+	EMPTY,
+	levelOf,
+	navToSearch,
+	parseNav,
+	photoFilter,
+	sanitize,
+	type Lookup,
+	type PhotoLite
+} from './url';
 
-const KEYS = ['c', 's', 'p', 'who', 'trip'] as const;
+const KEYS = ['c', 's', 'p', 'by', 'who', 'trip'] as const;
+
+// photos by "country" and "country/spot", for the URL sanitizer (built once)
+const byPlace: Record<string, PhotoLite[]> = {};
+for (const p of photos)
+	for (const k of [p.country, `${p.country}/${p.spot}`]) (byPlace[k] ??= []).push(p);
 
 const lookup: Lookup = {
 	person: (id) => personById.has(id),
-	visit: (id) => visitById.get(id),
-	countryVisits: (c) => countryById.get(c)?.visits.map((v) => v.id),
-	spotVisits: (c, s) => getSpot(c, s)?.visits.map((v) => v.visit),
+	visit: (id) => visitById.has(id),
+	photosIn: (c, s) => byPlace[s ? `${c}/${s}` : c],
 	photo: (p) => photoById.get(p)
 };
+
+/** Photographer dropdown: people with at least one published photo (people.json order). */
+export const photographers = [...personById.values()].filter((x) =>
+	photos.some((p) => p.photographer === x.id)
+);
+/** Traveler dropdown: people tagged in at least one photo (captions.toml `people`). */
+export const travelers = [...personById.values()].filter((x) =>
+	photos.some((p) => p.people?.includes(x.id))
+);
 
 const byTripThenTime = (a: Photo, b: Photo) =>
 	(visitById.get(b.visit)?.start ?? '').localeCompare(visitById.get(a.visit)?.start ?? '') ||
@@ -41,12 +63,15 @@ class AppState {
 	country = $derived(this.nav.c ? countryById.get(this.nav.c) : undefined);
 	spot = $derived(getSpot(this.nav.c, this.nav.s));
 	photo = $derived(this.nav.p ? photoById.get(this.nav.p) : undefined);
-	filtering = $derived(!!(this.nav.who || this.nav.trip));
+	filtering = $derived(!!(this.nav.by || this.nav.who || this.nav.trip));
 
 	// ---- filtered views ----
-	/** does a visit (trip) pass the Traveler + Trip filters */
-	ok = $derived(visitFilter(this.nav, lookup));
-	shown = $derived(photos.filter((p) => this.ok(p.visit)));
+	/** does a photo pass the Photographer + Traveler + Trip filters */
+	photoOk = $derived(photoFilter(this.nav));
+	shown = $derived(photos.filter((p) => this.photoOk(p)));
+	private shownVisits = $derived(new Set(this.shown.map((p) => p.visit)));
+	/** a trip stays visible while any of its photos pass the filters */
+	ok = (visitId: string) => this.shownVisits.has(visitId);
 	private counts = $derived.by(() => {
 		const m = new Map<string, number>(); // eslint-disable-line svelte/prefer-svelte-reactivity -- rebuilt on each derive
 		for (const p of this.shown) {
@@ -69,15 +94,18 @@ class AppState {
 		return this.shown.filter((p) => p.country === c && (!s || p.spot === s)).sort(byTripThenTime);
 	});
 
-	/** Trip dropdown: trips matching the Traveler, limited to the current place, newest first */
+	/** Trip dropdown: trips with photos matching Photographer + Traveler, in the current place,
+	 *  newest first */
 	tripOptions = $derived.by(() => {
-		const here = this.spot
-			? new Set(this.spot.visits.map((v) => v.visit))
-			: this.country
-				? new Set(this.country.visits.map((v) => v.id))
-				: null;
-		const who = this.nav.who;
-		return visits.filter((v) => (!here || here.has(v.id)) && (!who || v.companions.includes(who)));
+		const f = photoFilter({ by: this.nav.by, who: this.nav.who, trip: null });
+		const c = this.nav.c;
+		const s = this.nav.s;
+		const ids = new Set(
+			photos
+				.filter((p) => f(p) && (!c || p.country === c) && (!s || p.spot === s))
+				.map((p) => p.visit)
+		);
+		return visits.filter((v) => ids.has(v.id));
 	});
 
 	/** photos + trips in the current scope, for the filter bar's result line */
@@ -129,10 +157,11 @@ class AppState {
 	selectSpot = (c: string, s: string) => this.go({ ...this.nav, c, s, p: null });
 	up = () => (this.nav.s ? this.selectCountry(this.nav.c!) : this.world());
 
-	/** Changing Traveler resets Trip. */
+	/** Changing Photographer or Traveler resets Trip. */
+	setBy = (by: string | null) => this.go({ ...this.nav, by, trip: null, p: null });
 	setWho = (who: string | null) => this.go({ ...this.nav, who, trip: null, p: null });
 	setTrip = (trip: string | null) => this.go({ ...this.nav, trip, p: null });
-	clearFilters = () => this.go({ ...this.nav, who: null, trip: null });
+	clearFilters = () => this.go({ ...this.nav, by: null, who: null, trip: null });
 
 	openPhoto = (p: string) => {
 		const ph = photoById.get(p);

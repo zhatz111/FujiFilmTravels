@@ -236,7 +236,11 @@
 	}
 
 	$effect(() => {
-		const n = { c: app.nav.c, s: app.nav.s, filter: `${app.nav.who}|${app.nav.trip}` };
+		const n = {
+			c: app.nav.c,
+			s: app.nav.s,
+			filter: `${app.nav.by}|${app.nav.who}|${app.nav.trip}`
+		};
 		if (!map) return;
 		untrack(() => {
 			if (prev && prev.c === n.c && prev.s === n.s && prev.filter === n.filter) return;

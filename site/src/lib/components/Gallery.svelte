@@ -19,7 +19,7 @@
 
 	/** up to 3 cover photos that pass the filters (favorites first from the pipeline, then any) */
 	const cover = (c: Country) => {
-		const ok = (p: Photo | undefined): p is Photo => !!p && app.ok(p.visit);
+		const ok = (p: Photo | undefined): p is Photo => !!p && app.photoOk(p);
 		const picks = c.cover.map((id) => photoById.get(id)).filter(ok);
 		for (const p of app.shown) {
 			if (picks.length >= 3) break;

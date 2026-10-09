@@ -5,17 +5,17 @@
 @property --bg {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #E7EDEA;
+	initial-value: #e7edea;
 }
 @property --surface {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #F6F9F7;
+	initial-value: #f6f9f7;
 }
 @property --card {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #FFFFFF;
+	initial-value: #ffffff;
 }
 @property --surface-glass {
 	syntax: '<color>';
@@ -25,117 +25,117 @@
 @property --panel {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: rgba(247, 250, 248, 0.70);
+	initial-value: rgba(247, 250, 248, 0.7);
 }
 @property --line {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #C3D0CA;
+	initial-value: #c3d0ca;
 }
 @property --ink {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #17231D;
+	initial-value: #17231d;
 }
 @property --ink-strong {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #12201A;
+	initial-value: #12201a;
 }
 @property --muted {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #4F6158;
+	initial-value: #4f6158;
 }
 @property --faint {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #8A9A92;
+	initial-value: #8a9a92;
 }
 @property --caption {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #33433B;
+	initial-value: #33433b;
 }
 @property --pine {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #2D5A43;
+	initial-value: #2d5a43;
 }
 @property --pine-dark {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #1C3B2C;
+	initial-value: #1c3b2c;
 }
 @property --pine-tint {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #E3EDE7;
+	initial-value: #e3ede7;
 }
 @property --on-pine {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #FFFFFF;
+	initial-value: #ffffff;
 }
 @property --sunrise {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #B4551A;
+	initial-value: #b4551a;
 }
 @property --slate {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #3F6F86;
+	initial-value: #3f6f86;
 }
 @property --pin-photo {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #D2462B;
+	initial-value: #d2462b;
 }
 @property --pin-photo-hover {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #E2694F;
+	initial-value: #e2694f;
 }
 @property --pin-photo-open {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #2D5A43;
+	initial-value: #2d5a43;
 }
 @property --live {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #1E9E68;
+	initial-value: #1e9e68;
 }
 @property --live-soft {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #E3F3EA;
+	initial-value: #e3f3ea;
 }
 @property --live-line {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #A9D6BF;
+	initial-value: #a9d6bf;
 }
 @property --live-ink {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #14402B;
+	initial-value: #14402b;
 }
 @property --upcoming {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #2F6FA3;
+	initial-value: #2f6fa3;
 }
 @property --upcoming-soft {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #F1F6F9;
+	initial-value: #f1f6f9;
 }
 @property --upcoming-line {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #8FB0C9;
+	initial-value: #8fb0c9;
 }
 @property --lightbox-bg {
 	syntax: '<color>';
@@ -145,78 +145,83 @@
 @property --sky-top {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #D6E4E6;
+	initial-value: #d6e4e6;
 }
 @property --sky-mid {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #E9EFEC;
+	initial-value: #e9efec;
 }
 @property --sky-bottom {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #DFE7E2;
+	initial-value: #dfe7e2;
 }
 @property --sun {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #F6E2C4;
+	initial-value: #f6e2c4;
 }
 @property --ridge-1 {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #C7D5D2;
+	initial-value: #c7d5d2;
 }
 @property --ridge-2 {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #AFC3BE;
+	initial-value: #afc3be;
 }
 @property --ridge-3 {
 	syntax: '<color>';
 	inherits: true;
-	initial-value: #93ADA6;
+	initial-value: #93ada6;
 }
 
 :root {
-	--bg: #E7EDEA;
-	--surface: #F6F9F7;
-	--card: #FFFFFF;
+	--bg: #e7edea;
+	--surface: #f6f9f7;
+	--card: #ffffff;
 	--surface-glass: rgba(247, 250, 248, 0.94);
-	--panel: rgba(247, 250, 248, 0.70);
-	--line: #C3D0CA;
-	--ink: #17231D;
-	--ink-strong: #12201A;
-	--muted: #4F6158;
-	--faint: #8A9A92;
-	--caption: #33433B;
-	--pine: #2D5A43;
-	--pine-dark: #1C3B2C;
-	--pine-tint: #E3EDE7;
-	--on-pine: #FFFFFF;
-	--sunrise: #B4551A;
-	--slate: #3F6F86;
-	--pin-photo: #D2462B;
-	--pin-photo-hover: #E2694F;
-	--pin-photo-open: #2D5A43;
-	--live: #1E9E68;
-	--live-soft: #E3F3EA;
-	--live-line: #A9D6BF;
-	--live-ink: #14402B;
-	--upcoming: #2F6FA3;
-	--upcoming-soft: #F1F6F9;
-	--upcoming-line: #8FB0C9;
+	--panel: rgba(247, 250, 248, 0.7);
+	--line: #c3d0ca;
+	--ink: #17231d;
+	--ink-strong: #12201a;
+	--muted: #4f6158;
+	--faint: #8a9a92;
+	--caption: #33433b;
+	--pine: #2d5a43;
+	--pine-dark: #1c3b2c;
+	--pine-tint: #e3ede7;
+	--on-pine: #ffffff;
+	--sunrise: #b4551a;
+	--slate: #3f6f86;
+	--pin-photo: #d2462b;
+	--pin-photo-hover: #e2694f;
+	--pin-photo-open: #2d5a43;
+	--live: #1e9e68;
+	--live-soft: #e3f3ea;
+	--live-line: #a9d6bf;
+	--live-ink: #14402b;
+	--upcoming: #2f6fa3;
+	--upcoming-soft: #f1f6f9;
+	--upcoming-line: #8fb0c9;
 	--lightbox-bg: rgba(231, 237, 234, 0.97);
-	--sky-top: #D6E4E6;
-	--sky-mid: #E9EFEC;
-	--sky-bottom: #DFE7E2;
-	--sun: #F6E2C4;
-	--ridge-1: #C7D5D2;
-	--ridge-2: #AFC3BE;
-	--ridge-3: #93ADA6;
+	--sky-top: #d6e4e6;
+	--sky-mid: #e9efec;
+	--sky-bottom: #dfe7e2;
+	--sun: #f6e2c4;
+	--ridge-1: #c7d5d2;
+	--ridge-2: #afc3be;
+	--ridge-3: #93ada6;
 
 	/* derived */
-	--stage-gradient: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-mid) 60%, var(--sky-bottom) 100%);
+	--stage-gradient: linear-gradient(
+		180deg,
+		var(--sky-top) 0%,
+		var(--sky-mid) 60%,
+		var(--sky-bottom) 100%
+	);
 	--contour: rgba(122, 92, 54, 0.26);
 	--contour-index: rgba(122, 92, 54, 0.5);
 	--contour-label: #6b4f2c;
@@ -246,91 +251,112 @@
 	--ease-theme: cubic-bezier(0.45, 0, 0.2, 1);
 	color-scheme: light;
 	transition-timing-function: var(--ease-theme);
-	transition-property: --bg, --surface, --card, --surface-glass, --panel, --line, --ink, --ink-strong, --muted, --faint, --caption, --pine, --pine-dark, --pine-tint, --on-pine, --sunrise, --slate, --pin-photo, --pin-photo-hover, --pin-photo-open, --live, --live-soft, --live-line, --live-ink, --upcoming, --upcoming-soft, --upcoming-line, --lightbox-bg, --sky-top, --sky-mid, --sky-bottom, --sun, --ridge-1, --ridge-2, --ridge-3;
-	transition-duration: 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1600ms, 1600ms, 1600ms, 1600ms, 1400ms, 1400ms, 1400ms;
-	transition-delay: 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 200ms, 200ms, 200ms, 200ms, 200ms, 200ms, 200ms;
+	transition-property:
+		--bg, --surface, --card, --surface-glass, --panel, --line, --ink, --ink-strong, --muted,
+		--faint, --caption, --pine, --pine-dark, --pine-tint, --on-pine, --sunrise, --slate,
+		--pin-photo, --pin-photo-hover, --pin-photo-open, --live, --live-soft, --live-line, --live-ink,
+		--upcoming, --upcoming-soft, --upcoming-line, --lightbox-bg, --sky-top, --sky-mid, --sky-bottom,
+		--sun, --ridge-1, --ridge-2, --ridge-3;
+	transition-duration:
+		1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms,
+		1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms,
+		1000ms, 1000ms, 1000ms, 1000ms, 1600ms, 1600ms, 1600ms, 1600ms, 1400ms, 1400ms, 1400ms;
+	transition-delay:
+		700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms,
+		700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms, 700ms,
+		700ms, 700ms, 200ms, 200ms, 200ms, 200ms, 200ms, 200ms, 200ms;
 }
 
 :root[data-theme='dark'] {
-	--bg: #0F1916;
-	--surface: #16221E;
-	--card: #1B2925;
+	--bg: #0f1916;
+	--surface: #16221e;
+	--card: #1b2925;
 	--surface-glass: rgba(22, 34, 30, 0.92);
 	--panel: rgba(22, 34, 30, 0.72);
-	--line: #2C3D37;
-	--ink: #E2EBE6;
-	--ink-strong: #F1F6F3;
-	--muted: #9FB2A8;
-	--faint: #5D6E66;
-	--caption: #C6D2CC;
-	--pine: #7FC4A0;
-	--pine-dark: #A9DDC0;
-	--pine-tint: #1F3A2E;
-	--on-pine: #0F1916;
-	--sunrise: #E8925A;
-	--slate: #8DB7CB;
-	--pin-photo: #E2694F;
-	--pin-photo-hover: #EE8A72;
-	--pin-photo-open: #7FC4A0;
-	--live: #38C58D;
-	--live-soft: #12322A;
-	--live-line: #2C6B53;
-	--live-ink: #BFEBD6;
-	--upcoming: #78AEDB;
+	--line: #2c3d37;
+	--ink: #e2ebe6;
+	--ink-strong: #f1f6f3;
+	--muted: #9fb2a8;
+	--faint: #5d6e66;
+	--caption: #c6d2cc;
+	--pine: #7fc4a0;
+	--pine-dark: #a9ddc0;
+	--pine-tint: #1f3a2e;
+	--on-pine: #0f1916;
+	--sunrise: #e8925a;
+	--slate: #8db7cb;
+	--pin-photo: #e2694f;
+	--pin-photo-hover: #ee8a72;
+	--pin-photo-open: #7fc4a0;
+	--live: #38c58d;
+	--live-soft: #12322a;
+	--live-line: #2c6b53;
+	--live-ink: #bfebd6;
+	--upcoming: #78aedb;
 	--upcoming-soft: #132431;
-	--upcoming-line: #35566F;
+	--upcoming-line: #35566f;
 	--lightbox-bg: rgba(12, 20, 18, 0.97);
-	--sky-top: #0A1320;
-	--sky-mid: #15233A;
-	--sky-bottom: #1C2B33;
-	--sun: #E8875A;
-	--ridge-1: #26383E;
-	--ridge-2: #1D2E33;
+	--sky-top: #0a1320;
+	--sky-mid: #15233a;
+	--sky-bottom: #1c2b33;
+	--sun: #e8875a;
+	--ridge-1: #26383e;
+	--ridge-2: #1d2e33;
 	--ridge-3: #152427;
 	--shadow-stage: 0 10px 40px rgba(0, 0, 0, 0.35);
 	color-scheme: dark;
-	transition-property: --bg, --surface, --card, --surface-glass, --panel, --line, --ink, --ink-strong, --muted, --faint, --caption, --pine, --pine-dark, --pine-tint, --on-pine, --sunrise, --slate, --pin-photo, --pin-photo-hover, --pin-photo-open, --live, --live-soft, --live-line, --live-ink, --upcoming, --upcoming-soft, --upcoming-line, --lightbox-bg, --sky-top, --sky-mid, --sky-bottom, --sun, --ridge-1, --ridge-2, --ridge-3;
-	transition-duration: 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1600ms, 1600ms, 1600ms, 1600ms, 1400ms, 1400ms, 1400ms;
-	transition-delay: 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 300ms, 300ms, 300ms, 300ms, 700ms, 700ms, 700ms;
+	transition-property:
+		--bg, --surface, --card, --surface-glass, --panel, --line, --ink, --ink-strong, --muted,
+		--faint, --caption, --pine, --pine-dark, --pine-tint, --on-pine, --sunrise, --slate,
+		--pin-photo, --pin-photo-hover, --pin-photo-open, --live, --live-soft, --live-line, --live-ink,
+		--upcoming, --upcoming-soft, --upcoming-line, --lightbox-bg, --sky-top, --sky-mid, --sky-bottom,
+		--sun, --ridge-1, --ridge-2, --ridge-3;
+	transition-duration:
+		1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms,
+		1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms, 1000ms,
+		1000ms, 1000ms, 1000ms, 1000ms, 1600ms, 1600ms, 1600ms, 1600ms, 1400ms, 1400ms, 1400ms;
+	transition-delay:
+		0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms,
+		0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 0ms, 300ms, 300ms, 300ms, 300ms, 700ms, 700ms, 700ms;
 }
 
 /* no JS: follow the system setting */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
-		--bg: #0F1916;
-		--surface: #16221E;
-		--card: #1B2925;
+		--bg: #0f1916;
+		--surface: #16221e;
+		--card: #1b2925;
 		--surface-glass: rgba(22, 34, 30, 0.92);
 		--panel: rgba(22, 34, 30, 0.72);
-		--line: #2C3D37;
-		--ink: #E2EBE6;
-		--ink-strong: #F1F6F3;
-		--muted: #9FB2A8;
-		--faint: #5D6E66;
-		--caption: #C6D2CC;
-		--pine: #7FC4A0;
-		--pine-dark: #A9DDC0;
-		--pine-tint: #1F3A2E;
-		--on-pine: #0F1916;
-		--sunrise: #E8925A;
-		--slate: #8DB7CB;
-		--pin-photo: #E2694F;
-		--pin-photo-hover: #EE8A72;
-		--pin-photo-open: #7FC4A0;
-		--live: #38C58D;
-		--live-soft: #12322A;
-		--live-line: #2C6B53;
-		--live-ink: #BFEBD6;
-		--upcoming: #78AEDB;
+		--line: #2c3d37;
+		--ink: #e2ebe6;
+		--ink-strong: #f1f6f3;
+		--muted: #9fb2a8;
+		--faint: #5d6e66;
+		--caption: #c6d2cc;
+		--pine: #7fc4a0;
+		--pine-dark: #a9ddc0;
+		--pine-tint: #1f3a2e;
+		--on-pine: #0f1916;
+		--sunrise: #e8925a;
+		--slate: #8db7cb;
+		--pin-photo: #e2694f;
+		--pin-photo-hover: #ee8a72;
+		--pin-photo-open: #7fc4a0;
+		--live: #38c58d;
+		--live-soft: #12322a;
+		--live-line: #2c6b53;
+		--live-ink: #bfebd6;
+		--upcoming: #78aedb;
 		--upcoming-soft: #132431;
-		--upcoming-line: #35566F;
+		--upcoming-line: #35566f;
 		--lightbox-bg: rgba(12, 20, 18, 0.97);
-		--sky-top: #0A1320;
-		--sky-mid: #15233A;
-		--sky-bottom: #1C2B33;
-		--sun: #E8875A;
-		--ridge-1: #26383E;
-		--ridge-2: #1D2E33;
+		--sky-top: #0a1320;
+		--sky-mid: #15233a;
+		--sky-bottom: #1c2b33;
+		--sun: #e8875a;
+		--ridge-1: #26383e;
+		--ridge-2: #1d2e33;
 		--ridge-3: #152427;
 		color-scheme: dark;
 	}

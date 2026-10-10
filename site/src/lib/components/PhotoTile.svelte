@@ -15,6 +15,7 @@
 
 <button
 	class="tile press"
+	data-photo={photo.id}
 	onclick={onopen}
 	aria-label="Open photo: {photo.caption ?? spot?.name ?? 'photo'}, by {by}"
 >

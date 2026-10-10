@@ -34,7 +34,7 @@
   {
     "id": "el-calafate",
     "country": "argentina",
-    "name": "El Calafate",
+    "name": "El Chaltén",
     "lat": -49.3314,
     "lon": -72.887,
     "radius_km": 0.5,
@@ -72,7 +72,7 @@
   {
     "id": "el-calafate-2",
     "country": "argentina",
-    "name": "El Calafate",
+    "name": "Perito Moreno Glacier",
     "lat": -50.4354,
     "lon": -73.0029,
     "radius_km": 0.5,
@@ -126,6 +126,59 @@
     ]
   },
   {
+    "id": "brugge",
+    "country": "belgium",
+    "name": "Brugge",
+    "lat": 51.2086,
+    "lon": 3.2248,
+    "radius_km": 0.5,
+    "zoom": 14.6,
+    "count": 5,
+    "photos": [
+      "2025-12-21-1ec8c94f3b",
+      "2025-12-21-590fdf9ef6",
+      "2025-12-21-50cf5d97f3",
+      "2025-12-21-06a648fe46",
+      "2025-12-21-b12d83a5d8"
+    ],
+    "visits": [
+      {
+        "visit": "belgium-2025-12",
+        "start": "2025-12-21",
+        "end": "2025-12-21",
+        "photos": 5,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "gent",
+    "country": "belgium",
+    "name": "Gent",
+    "lat": 51.05,
+    "lon": 3.7283,
+    "radius_km": 0.5,
+    "zoom": 14.6,
+    "count": 2,
+    "photos": [
+      "2025-12-22-3cf4e24372",
+      "2025-12-22-beedbd44ae"
+    ],
+    "visits": [
+      {
+        "visit": "belgium-2025-12",
+        "start": "2025-12-22",
+        "end": "2025-12-22",
+        "photos": 2,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
     "id": "bellagio",
     "country": "italy",
     "name": "Bellagio",
@@ -153,6 +206,88 @@
         "start": "2025-12-17",
         "end": "2025-12-17",
         "photos": 11,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bergamo",
+    "country": "italy",
+    "name": "Bergamo",
+    "lat": 45.6942,
+    "lon": 9.6704,
+    "radius_km": 0.5,
+    "zoom": 14.8,
+    "count": 5,
+    "photos": [
+      "2025-12-18-21ea1b4552",
+      "2025-12-18-598c680269",
+      "2025-12-18-6ec85adc60",
+      "2025-12-18-8556938e29",
+      "2025-12-18-340db632a1"
+    ],
+    "visits": [
+      {
+        "visit": "italy-2025-12",
+        "start": "2025-12-18",
+        "end": "2025-12-18",
+        "photos": 5,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "milano",
+    "country": "italy",
+    "name": "Milano",
+    "lat": 45.4694,
+    "lon": 9.1812,
+    "radius_km": 0.5,
+    "zoom": 14.8,
+    "count": 1,
+    "photos": [
+      "2025-12-18-78a07bdfd5"
+    ],
+    "visits": [
+      {
+        "visit": "italy-2025-12",
+        "start": "2025-12-18",
+        "end": "2025-12-18",
+        "photos": 1,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "turin",
+    "country": "italy",
+    "name": "Turin",
+    "lat": 45.0707,
+    "lon": 7.6871,
+    "radius_km": 0.5,
+    "zoom": 14.8,
+    "count": 7,
+    "photos": [
+      "2025-12-15-5bc26eedd4",
+      "2025-12-15-d9e69c5bb0",
+      "2025-12-15-f52db1870a",
+      "2025-12-15-432b246507",
+      "2025-12-15-fd2a4fe9a7",
+      "2025-12-15-387a8086e4",
+      "2025-12-15-b920bd9b06"
+    ],
+    "visits": [
+      {
+        "visit": "italy-2025-12",
+        "start": "2025-12-15",
+        "end": "2025-12-15",
+        "photos": 7,
         "people": [
           "zach"
         ]
@@ -377,6 +512,135 @@
         "start": "2025-04-20",
         "end": "2025-04-25",
         "photos": 9,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lugano",
+    "country": "switzerland",
+    "name": "Lugano",
+    "lat": 46.0042,
+    "lon": 8.9504,
+    "radius_km": 0.5,
+    "zoom": 14.8,
+    "count": 13,
+    "photos": [
+      "2025-12-19-b1cc12cc35",
+      "2025-12-19-9e95e9b5b0",
+      "2025-12-19-d6f2dce0c9",
+      "2025-12-19-685c0e17e4",
+      "2025-12-19-e9963e113e",
+      "2025-12-19-95f4991918",
+      "2025-12-19-4e8976eba6",
+      "2025-12-19-6332c02d9b",
+      "2025-12-19-a2b23ca06a",
+      "2025-12-19-83f67c8620",
+      "2025-12-19-0409650dec",
+      "2025-12-19-4f64bdcdb5",
+      "2025-12-19-af87de7c96"
+    ],
+    "visits": [
+      {
+        "visit": "switzerland-2025-12",
+        "start": "2025-12-19",
+        "end": "2025-12-19",
+        "photos": 13,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "london",
+    "country": "united-kingdom",
+    "name": "London",
+    "lat": 51.5127,
+    "lon": -0.1096,
+    "radius_km": 1.68,
+    "zoom": 12.9,
+    "count": 9,
+    "photos": [
+      "2025-12-25-360d9d9676",
+      "2025-12-25-f1b944ada7",
+      "2025-12-25-a37469a613",
+      "2025-12-25-f6821b04d2",
+      "2025-12-26-ff7ac4fd99",
+      "2025-12-26-9639a6fd74",
+      "2025-12-28-6987973570",
+      "2025-12-28-16810b66ee",
+      "2025-12-28-b06fcf180d"
+    ],
+    "visits": [
+      {
+        "visit": "united-kingdom-2025-12",
+        "start": "2025-12-25",
+        "end": "2025-12-28",
+        "photos": 9,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "oxford",
+    "country": "united-kingdom",
+    "name": "Oxford",
+    "lat": 51.7522,
+    "lon": -1.2579,
+    "radius_km": 0.5,
+    "zoom": 14.6,
+    "count": 2,
+    "photos": [
+      "2025-12-27-65d3f7cd8f",
+      "2025-12-27-bb42acbe02"
+    ],
+    "visits": [
+      {
+        "visit": "united-kingdom-2025-12",
+        "start": "2025-12-27",
+        "end": "2025-12-27",
+        "photos": 2,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "san-diego",
+    "country": "united-states",
+    "name": "San Diego",
+    "lat": 32.722,
+    "lon": -117.1528,
+    "radius_km": 1.76,
+    "zoom": 13.2,
+    "count": 13,
+    "photos": [
+      "2024-10-27-49a9b932c6",
+      "2024-10-27-c931bec4e1",
+      "2024-10-27-21d00d34e0",
+      "2024-10-27-1f609bda73",
+      "2024-10-27-90e2d5866f",
+      "2024-10-31-1887bf006f",
+      "2024-10-31-64bd80a4ce",
+      "2024-10-31-a9e4ca960e",
+      "2024-10-31-ec2f76daec",
+      "2024-10-31-9b67a4fc8e",
+      "2024-10-31-d094c6dfe9",
+      "2024-10-31-724c9f59f6",
+      "2024-10-31-a358d337c7"
+    ],
+    "visits": [
+      {
+        "visit": "united-states-2024-10",
+        "start": "2024-10-27",
+        "end": "2024-10-31",
+        "photos": 13,
         "people": [
           "zach"
         ]

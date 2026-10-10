@@ -36,28 +36,65 @@
     ]
   },
   {
+    "id": "belgium",
+    "iso2": "BE",
+    "name": "Belgium",
+    "lat": 51.1293,
+    "lon": 3.4765,
+    "zoom": 9.0,
+    "count": 7,
+    "spots": [
+      "brugge",
+      "gent"
+    ],
+    "cover": [
+      "2025-12-22-beedbd44ae",
+      "2025-12-22-3cf4e24372",
+      "2025-12-21-b12d83a5d8"
+    ],
+    "last_visit": "2025-12-22",
+    "visits": [
+      {
+        "id": "belgium-2025-12",
+        "start": "2025-12-21",
+        "end": "2025-12-22",
+        "photos": 7,
+        "label": "20251213 Europe",
+        "companions": [
+          "zach"
+        ],
+        "photographers": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
     "id": "italy",
     "iso2": "IT",
     "name": "Italy",
-    "lat": 45.9911,
-    "lon": 9.259,
-    "zoom": 9.0,
-    "count": 11,
+    "lat": 45.5309,
+    "lon": 8.6788,
+    "zoom": 8.0,
+    "count": 24,
     "spots": [
-      "bellagio"
+      "bellagio",
+      "turin",
+      "bergamo",
+      "milano"
     ],
     "cover": [
-      "2025-12-17-13756531a1",
-      "2025-12-17-689d235ea4",
-      "2025-12-17-01df2f573a"
+      "2025-12-18-78a07bdfd5",
+      "2025-12-18-340db632a1",
+      "2025-12-18-8556938e29"
     ],
-    "last_visit": "2025-12-28",
+    "last_visit": "2025-12-18",
     "visits": [
       {
         "id": "italy-2025-12",
         "start": "2025-12-15",
-        "end": "2025-12-28",
-        "photos": 11,
+        "end": "2025-12-18",
+        "photos": 24,
         "label": "20251213 Europe",
         "companions": [
           "zach"
@@ -99,6 +136,106 @@
         "end": "2025-04-25",
         "photos": 40,
         "label": "20250413 Japan",
+        "companions": [
+          "zach"
+        ],
+        "photographers": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "switzerland",
+    "iso2": "CH",
+    "name": "Switzerland",
+    "lat": 46.0042,
+    "lon": 8.9504,
+    "zoom": 9.0,
+    "count": 13,
+    "spots": [
+      "lugano"
+    ],
+    "cover": [
+      "2025-12-19-af87de7c96",
+      "2025-12-19-4f64bdcdb5",
+      "2025-12-19-0409650dec"
+    ],
+    "last_visit": "2025-12-19",
+    "visits": [
+      {
+        "id": "switzerland-2025-12",
+        "start": "2025-12-19",
+        "end": "2025-12-19",
+        "photos": 13,
+        "label": "20251213 Europe",
+        "companions": [
+          "zach"
+        ],
+        "photographers": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "united-kingdom",
+    "iso2": "GB",
+    "name": "United Kingdom",
+    "lat": 51.6271,
+    "lon": -0.6752,
+    "zoom": 8.7,
+    "count": 11,
+    "spots": [
+      "london",
+      "oxford"
+    ],
+    "cover": [
+      "2025-12-28-b06fcf180d",
+      "2025-12-28-16810b66ee",
+      "2025-12-28-6987973570"
+    ],
+    "last_visit": "2025-12-28",
+    "visits": [
+      {
+        "id": "united-kingdom-2025-12",
+        "start": "2025-12-25",
+        "end": "2025-12-28",
+        "photos": 11,
+        "label": "20251213 Europe",
+        "companions": [
+          "zach"
+        ],
+        "photographers": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "united-states",
+    "iso2": "US",
+    "name": "United States",
+    "lat": 32.722,
+    "lon": -117.1528,
+    "zoom": 9.0,
+    "count": 13,
+    "spots": [
+      "san-diego"
+    ],
+    "cover": [
+      "2024-10-31-a358d337c7",
+      "2024-10-31-724c9f59f6",
+      "2024-10-31-d094c6dfe9"
+    ],
+    "last_visit": "2024-10-31",
+    "visits": [
+      {
+        "id": "united-states-2024-10",
+        "start": "2024-10-27",
+        "end": "2024-10-31",
+        "photos": 13,
+        "label": "20241027 San Diego",
         "companions": [
           "zach"
         ],

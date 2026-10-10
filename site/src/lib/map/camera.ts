@@ -67,11 +67,13 @@ export function jump(map: MLMap, t: Target) {
 	return settle(map, () => map.jumpTo({ center: [t.lon, t.lat], zoom: t.zoom }));
 }
 
-/** World -> Country: one extra spin while pulling back (~1.2 s), then dive in (~1.4 s). */
+/** World -> Country: one extra spin while pulling back (~1.2 s), then dive in (~1.4 s).
+ *  Already zoomed in by hand (a zoom step past the world view): skip the spin, just fly. */
 export async function spinIn(map: MLMap, t: Target) {
 	stop(map);
 	const zoom = countryZoom(t.zoom);
 	if (reducedMotion()) return jump(map, { ...t, zoom });
+	if (map.getZoom() > worldZoom(map.getContainer()) + 1) return flyTo(map, { ...t, zoom });
 	const from = map.getCenter();
 	const z0 = map.getZoom();
 	const delta = (((t.lon - from.lng) % 360) + 360) % 360;

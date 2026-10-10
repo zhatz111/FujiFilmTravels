@@ -1,91 +1,151 @@
-/* PhotoSwipe restyled to Alpine Morning (docs/03-design-system.md "Lightbox"). */
+/* PhotoSwipe restyled to Alpine Morning (docs/03-design-system.md "Lightbox"):
+   a card that grows out of the tile that opened it, over a dimmed, blurred page.
+   Card geometry (--ct/--cr/--cb/--cl insets, --side, --info-h) is set by Lightbox.ts. */
 .pswp {
-	--pswp-bg: var(--bg);
+	--pswp-bg: rgba(10, 18, 14, 0.5);
 	--pswp-placeholder-bg: var(--line);
-	--pswp-icon-color: var(--pine);
-	--pswp-icon-color-secondary: #fff;
-	--pswp-icon-stroke-color: #fff;
+	--pswp-icon-color: var(--ink);
+	--pswp-icon-color-secondary: var(--card);
+	--pswp-icon-stroke-color: var(--card);
 	--pswp-icon-stroke-width: 0;
+	--ease-settle: cubic-bezier(
+		0.2,
+		0.9,
+		0.25,
+		1
+	); /* ~critically damped spring: fast start, no overshoot */
 	font-family: var(--font-body);
 	color: var(--ink);
 }
-.pswp__bg {
-	opacity: 0.97 !important;
+.pswp__card {
+	position: absolute;
+	inset: var(--ct) var(--cr) var(--cb) var(--cl);
+	border-radius: var(--radius-stage);
+	background: var(--card);
+	border: 1px solid var(--line);
+	box-shadow:
+		0 30px 80px rgba(10, 18, 14, 0.35),
+		0 2px 8px rgba(10, 18, 14, 0.12);
+	pointer-events: none;
+	transition: inset 320ms var(--ease-settle); /* follows each photo's height */
+}
+/* a zoomed photo stays inside the card's photo area, never under the sidebar (only while zoomed:
+   the open/close zoom flies the photo from its tile, which can be anywhere on the page) */
+.pswp--zoomed-in .pswp__item {
+	clip-path: inset(
+		var(--ct) calc(var(--cr) + var(--side)) var(--cb) var(--cl) round var(--radius-stage) 0 0
+			var(--radius-stage)
+	);
+}
+/* PhotoSwipe puts overlay elements at z 10; the card belongs under the photo */
+.pswp .pswp__card {
+	z-index: 0;
+}
+/* close button sits over the sidebar's top corner */
+.pswp .pswp__top-bar {
+	z-index: 11;
 }
 .pswp__img {
-	box-shadow: var(--shadow-lightbox);
-	border-radius: 4px;
+	border-radius: 6px;
 }
 .pswp__counter {
 	display: none; /* position is shown in the sidebar */
 }
 
-/* round bordered buttons with centered icons (custom SVGs from Lightbox.ts) */
+/* quiet, round buttons that belong to the card; they react on press, not release */
 .pswp__button--close,
 .pswp__button--arrow {
 	display: grid !important;
 	place-items: center;
-	width: 48px !important;
-	height: 48px !important;
+	position: absolute !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	border-radius: 50% !important;
-	border: 1px solid var(--pine) !important;
-	background: var(--surface) !important;
-	opacity: 1 !important;
+	border: 0 !important;
+	visibility: visible;
+	transition:
+		background-color 120ms ease-out,
+		transform 100ms ease-out;
 }
 .pswp__button--close {
-	width: 44px !important;
-	height: 44px !important;
-	margin: 16px 16px 0 0 !important;
-	border-color: var(--sunrise) !important;
+	transition:
+		background-color 120ms ease-out,
+		transform 100ms ease-out,
+		top 320ms var(--ease-settle);
+	top: calc(var(--ct) + 14px);
+	right: calc(var(--cr) + 14px);
+	width: 34px !important;
+	height: 34px !important;
+	background: transparent !important;
 }
 .pswp__button--arrow {
-	position: absolute;
 	top: 50% !important;
-	margin-top: -24px !important;
-	visibility: visible;
+	width: 44px !important;
+	height: 44px !important;
+	margin-top: -22px !important;
+	background: var(--surface) !important;
+}
+/* zoomed in: the arrows step aside so the photo has the whole area (pan, or zoom out to navigate) */
+.pswp--zoomed-in .pswp__button--arrow {
+	opacity: 0 !important;
+	pointer-events: none;
 }
 .pswp__button--arrow--prev {
-	left: 24px;
+	left: calc(var(--cl) + 14px);
 }
 .pswp__button--arrow--next {
-	right: 404px; /* left of the 380px sidebar */
+	right: calc(var(--cr) + var(--side) + 14px); /* just left of the sidebar */
 }
 .pswp .pswp__button--close .pswp__icn,
 .pswp .pswp__button--arrow .pswp__icn {
 	position: static;
 	margin: 0;
-	width: 22px;
-	height: 22px;
+	width: 20px;
+	height: 20px;
 	fill: none;
-	stroke: var(--pine);
+	stroke: var(--ink);
 	transform: none; /* PhotoSwipe mirrors the next arrow; ours is drawn facing right */
 }
 .pswp .pswp__button--close .pswp__icn {
-	stroke: var(--sunrise);
+	width: 18px;
+	height: 18px;
+	stroke: var(--muted);
 }
-.pswp__button:hover {
-	background: var(--card) !important;
+.pswp__button--close:hover {
+	background: var(--surface) !important;
+}
+.pswp__button--close:hover .pswp__icn {
+	stroke: var(--ink);
+}
+.pswp__button--arrow:hover {
+	background: var(--line) !important;
+}
+.pswp__button--close:active,
+.pswp__button--arrow:active {
+	transform: scale(0.92);
+	transition-duration: 0ms;
 }
 .pswp__button:focus-visible {
 	outline: 2px solid var(--pine);
-	outline-offset: 3px;
+	outline-offset: 2px;
 }
 
-/* info sidebar: full-height column with a thin divider between photo and metadata */
+/* info sidebar: the card's right column, a shade off the photo side */
 .pswp__info {
 	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	width: 380px;
-	padding: 88px 32px 32px;
+	top: var(--ct);
+	right: var(--cr);
+	bottom: var(--cb);
+	width: var(--side);
+	padding: 60px 28px 28px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 	border-left: 1px solid var(--line);
+	border-radius: 0 var(--radius-stage) var(--radius-stage) 0;
+	background: var(--surface);
 	overflow-y: auto;
+	transition: inset 320ms var(--ease-settle);
 }
 /* clicks pass through the empty panel to the close button under its top padding
    (beats PhotoSwipe's `.pswp--ui-visible .pswp__hide-on-close { pointer-events: auto }`) */
@@ -106,6 +166,8 @@
 }
 .pswp__info h3 {
 	font-size: 28px;
+	line-height: 1.1;
+	letter-spacing: -0.01em;
 }
 .pswp-info__country {
 	font-size: 15px;
@@ -206,17 +268,17 @@
 }
 
 @media (max-width: 900px) {
-	/* phones: metadata sits under the photo, divided by a line on top */
+	/* phones: metadata sits under the photo, along the card's bottom edge */
 	.pswp__info {
 		top: auto;
-		left: 0;
+		left: var(--cl);
 		width: auto;
-		max-height: 220px;
+		max-height: var(--info-h);
 		padding: 16px;
 		gap: 10px;
 		border-left: 0;
 		border-top: 1px solid var(--line);
-		background: var(--surface);
+		border-radius: 0 0 var(--radius-stage) var(--radius-stage);
 	}
 	.pswp__info h3 {
 		font-size: 22px;
@@ -227,7 +289,31 @@
 	.pswp-info__people {
 		padding-top: 10px;
 	}
+	.pswp__button--close {
+		top: calc(var(--ct) + 9px);
+		right: calc(var(--cr) + 9px);
+	}
 	.pswp__button--arrow {
 		display: none !important; /* swipe on touch */
+	}
+	.pswp--zoomed-in .pswp__item {
+		clip-path: inset(
+			var(--ct) var(--cr) calc(var(--cb) + var(--info-h)) var(--cl) round var(--radius-stage)
+				var(--radius-stage) 0 0
+		);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.pswp__card,
+	.pswp__info,
+	.pswp__button--close {
+		transform: none;
+		transition: none; /* PhotoSwipe's plain fade only */
+	}
+}
+@media (prefers-reduced-transparency: reduce) {
+	.pswp {
+		--pswp-bg: rgba(10, 18, 14, 0.7);
 	}
 }

@@ -416,7 +416,10 @@
 	let lastInteraction = 0;
 	// a pointer held on the globe: never auto-spin then, since jumpTo would cancel the user's drag
 	let held = false;
+	// off-screen (scrolled to the gallery) or under the photo viewer: don't redraw the globe every frame
+	let onScreen = true;
 	function spin() {
+		new IntersectionObserver(([e]) => (onScreen = e.isIntersecting)).observe(container);
 		let last = performance.now();
 		const frame = (now: number) => {
 			if (!map) return;
@@ -424,6 +427,8 @@
 			last = now;
 			if (
 				app.level === 'world' &&
+				onScreen &&
+				!app.nav.p &&
 				!cam.reducedMotion() &&
 				!held &&
 				now - lastInteraction > 4000 &&

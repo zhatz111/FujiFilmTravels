@@ -1,14 +1,259 @@
 [
   {
-    "id": "kobe",
+    "id": "buenos-aires",
+    "country": "argentina",
+    "name": "Buenos Aires",
+    "lat": -34.6135,
+    "lon": -58.3814,
+    "radius_km": 0.98,
+    "zoom": 14.0,
+    "count": 9,
+    "photos": [
+      "2026-03-18-fd65dd4e72",
+      "2026-03-18-66939f802f",
+      "2026-03-18-019c8b3c4e",
+      "2026-03-18-d0930f7485",
+      "2026-03-22-083d0488ab",
+      "2026-03-22-ee6b755570",
+      "2026-03-22-8c6850b06a",
+      "2026-03-22-91d37931d3",
+      "2026-03-22-61946600b7"
+    ],
+    "visits": [
+      {
+        "visit": "argentina-2026-03",
+        "start": "2026-03-18",
+        "end": "2026-03-22",
+        "photos": 9,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "el-calafate",
+    "country": "argentina",
+    "name": "El Calafate",
+    "lat": -49.3314,
+    "lon": -72.887,
+    "radius_km": 0.5,
+    "zoom": 14.7,
+    "count": 15,
+    "photos": [
+      "2026-03-24-791c660118",
+      "2026-03-24-df6fb09969",
+      "2026-03-24-1e3d994451",
+      "2026-03-24-ffd6393105",
+      "2026-03-24-3d73a1a575",
+      "2026-03-24-37dc4cb8ef",
+      "2026-03-24-0f23baa03b",
+      "2026-03-25-6c4b171e6d",
+      "2026-03-25-15dda81c43",
+      "2026-03-25-9206188ed8",
+      "2026-03-25-1eacc36d39",
+      "2026-03-25-8b2d9a36c9",
+      "2026-03-25-a086c4aeec",
+      "2026-03-25-2c8ef4e52c",
+      "2026-03-25-821fdfdaa8"
+    ],
+    "visits": [
+      {
+        "visit": "argentina-2026-03",
+        "start": "2026-03-24",
+        "end": "2026-03-25",
+        "photos": 15,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "el-calafate-2",
+    "country": "argentina",
+    "name": "El Calafate",
+    "lat": -50.4354,
+    "lon": -73.0029,
+    "radius_km": 0.5,
+    "zoom": 14.6,
+    "count": 9,
+    "photos": [
+      "2026-03-26-92303167a5",
+      "2026-03-26-5ebc63c43d",
+      "2026-03-26-22ee6950be",
+      "2026-03-26-da9b721213",
+      "2026-03-26-5b187b12f7",
+      "2026-03-26-6ea61137d0",
+      "2026-03-26-6f2640c4b4",
+      "2026-03-26-e3fdce27ae",
+      "2026-03-26-1982247025"
+    ],
+    "visits": [
+      {
+        "visit": "argentina-2026-03",
+        "start": "2026-03-26",
+        "end": "2026-03-26",
+        "photos": 9,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "el-calafate-3",
+    "country": "argentina",
+    "name": "El Calafate",
+    "lat": -50.3449,
+    "lon": -72.2744,
+    "radius_km": 0.5,
+    "zoom": 14.6,
+    "count": 1,
+    "photos": [
+      "2026-03-23-c2cd5abb29"
+    ],
+    "visits": [
+      {
+        "visit": "argentina-2026-03",
+        "start": "2026-03-23",
+        "end": "2026-03-23",
+        "photos": 1,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bellagio",
+    "country": "italy",
+    "name": "Bellagio",
+    "lat": 45.9911,
+    "lon": 9.259,
+    "radius_km": 0.5,
+    "zoom": 14.8,
+    "count": 11,
+    "photos": [
+      "2025-12-17-fd5ba7dcfe",
+      "2025-12-17-4abdf39460",
+      "2025-12-17-9ca97750fa",
+      "2025-12-17-25af945bef",
+      "2025-12-17-8ead6bf17c",
+      "2025-12-17-c9f7acba19",
+      "2025-12-17-2c4ba9079e",
+      "2025-12-17-8692756b92",
+      "2025-12-17-01df2f573a",
+      "2025-12-17-689d235ea4",
+      "2025-12-17-13756531a1"
+    ],
+    "visits": [
+      {
+        "visit": "italy-2025-12",
+        "start": "2025-12-17",
+        "end": "2025-12-17",
+        "photos": 11,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "amagasaki",
     "country": "japan",
-    "name": "Kobe",
-    "lat": 34.6842,
-    "lon": 135.1882,
+    "name": "Amagasaki",
+    "lat": 34.6529,
+    "lon": 135.3862,
+    "radius_km": 0.5,
+    "zoom": 15.0,
+    "count": 8,
+    "photos": [
+      "2025-04-17-81021c8df6",
+      "2025-04-17-2a79fc4ddc",
+      "2025-04-17-62cb84594a",
+      "2025-04-17-8065104162",
+      "2025-04-17-90a86f3b47",
+      "2025-04-17-5654716edc",
+      "2025-04-17-a6c5ae9713",
+      "2025-04-17-d0b642450f"
+    ],
+    "visits": [
+      {
+        "visit": "japan-2025-04",
+        "start": "2025-04-17",
+        "end": "2025-04-17",
+        "photos": 8,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "chatan",
+    "country": "japan",
+    "name": "Chatan",
+    "lat": 26.3053,
+    "lon": 127.7592,
+    "radius_km": 0.5,
+    "zoom": 15.1,
+    "count": 1,
+    "photos": [
+      "2025-04-14-3b59e44d88"
+    ],
+    "visits": [
+      {
+        "visit": "japan-2025-04",
+        "start": "2025-04-14",
+        "end": "2025-04-14",
+        "photos": 1,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fujikawaguchiko",
+    "country": "japan",
+    "name": "Fujikawaguchiko",
+    "lat": 35.5128,
+    "lon": 138.7553,
     "radius_km": 0.5,
     "zoom": 15.0,
     "count": 5,
     "photos": [
+      "2025-04-21-a734ec9445",
+      "2025-04-21-989d119438",
+      "2025-04-21-71b6e498e4",
+      "2025-04-21-233546e0f9",
+      "2025-04-21-ec129522eb"
+    ],
+    "visits": [
+      {
+        "visit": "japan-2025-04",
+        "start": "2025-04-21",
+        "end": "2025-04-21",
+        "photos": 5,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "kobe",
+    "country": "japan",
+    "name": "Kobe",
+    "lat": 34.684,
+    "lon": 135.1881,
+    "radius_km": 0.5,
+    "zoom": 15.0,
+    "count": 7,
+    "photos": [
+      "2025-04-16-0394b13878",
+      "2025-04-16-67d5599984",
       "2025-04-16-1d7076f48e",
       "2025-04-16-367032080a",
       "2025-04-16-f51246fc83",
@@ -20,7 +265,7 @@
         "visit": "japan-2025-04",
         "start": "2025-04-16",
         "end": "2025-04-16",
-        "photos": 5,
+        "photos": 7,
         "people": [
           "zach"
         ]
@@ -46,6 +291,34 @@
         "start": "2025-04-18",
         "end": "2025-04-18",
         "photos": 2,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "nara-shi",
+    "country": "japan",
+    "name": "Nara-shi",
+    "lat": 34.6852,
+    "lon": 135.843,
+    "radius_km": 0.5,
+    "zoom": 15.0,
+    "count": 5,
+    "photos": [
+      "2025-04-20-5c5f30ffb7",
+      "2025-04-20-ead823f4dc",
+      "2025-04-20-e586f1d6f7",
+      "2025-04-20-049a889118",
+      "2025-04-20-d48ec5c552"
+    ],
+    "visits": [
+      {
+        "visit": "japan-2025-04",
+        "start": "2025-04-20",
+        "end": "2025-04-20",
+        "photos": 5,
         "people": [
           "zach"
         ]
@@ -82,14 +355,17 @@
     "id": "tokyo",
     "country": "japan",
     "name": "Tokyo",
-    "lat": 35.6663,
-    "lon": 139.7398,
-    "radius_km": 3.49,
-    "zoom": 12.2,
-    "count": 6,
+    "lat": 35.6708,
+    "lon": 139.7515,
+    "radius_km": 5.26,
+    "zoom": 11.6,
+    "count": 9,
     "photos": [
       "2025-04-20-baf9a80acc",
       "2025-04-20-b7ce4ff75f",
+      "2025-04-22-2b165f8181",
+      "2025-04-22-98055c315f",
+      "2025-04-22-0214d6ef57",
       "2025-04-25-c35ea00b23",
       "2025-04-25-fba37e4263",
       "2025-04-25-d5bc53ef15",
@@ -100,7 +376,38 @@
         "visit": "japan-2025-04",
         "start": "2025-04-20",
         "end": "2025-04-25",
-        "photos": 6,
+        "photos": 9,
+        "people": [
+          "zach"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "colonia-del-sacramento",
+    "country": "uruguay",
+    "name": "Colonia del Sacramento",
+    "lat": -34.4632,
+    "lon": -57.8348,
+    "radius_km": 0.5,
+    "zoom": 15.0,
+    "count": 8,
+    "photos": [
+      "2026-03-28-3955c9d46b",
+      "2026-03-28-792a85dc43",
+      "2026-03-28-e2f014acfe",
+      "2026-03-28-11c20916f7",
+      "2026-03-28-d4531f88fd",
+      "2026-03-28-9c9db2cd6d",
+      "2026-03-28-fe41e44a4b",
+      "2026-03-28-9ac8cb8035"
+    ],
+    "visits": [
+      {
+        "visit": "uruguay-2026-03",
+        "start": "2026-03-28",
+        "end": "2026-03-28",
+        "photos": 8,
         "people": [
           "zach"
         ]

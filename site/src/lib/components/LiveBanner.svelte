@@ -1,5 +1,6 @@
 <script lang="ts">
-	// "Currently in X · through DATE — Show on globe →" while a trip is live (client-only).
+	// "Currently in X · through DATE · Show on globe →" while a trip is live (client-only);
+	// on phones the second half drops to its own line.
 	import { monthDay } from '#lib/dates.ts';
 	import { app } from '#lib/state.svelte.ts';
 
@@ -13,25 +14,27 @@
 	{@const t = app.live}
 	<button class="live" onclick={show}>
 		<span class="dot" aria-hidden="true"><i></i><i></i></span>
-		<span>
-			<b>Currently in {t.name}</b>{#if !t.hide_end_date}<span class="through"
-					>{` · through ${monthDay(t.end)}`}</span
-				>{/if}
+		<span class="text">
+			<b>Currently in {t.name}</b>
+			<span class="sub">
+				{#if !t.hide_end_date}<span class="through">through {monthDay(t.end)}</span><span
+						class="sep"
+						aria-hidden="true">·</span
+					>{/if}<span class="mono go">Show on globe →</span>
+			</span>
 		</span>
-		<span class="mono go">Show on globe →</span>
 	</button>
 {/if}
 
 <style>
-	/* dot | text | link on one row; on narrow screens the link drops under the text,
-	   and the dot stays beside the first line instead of wrapping onto its own */
+	/* dot | text on one row; on phones the text splits into two lines:
+	   "Currently in X" / "through DATE · Show on globe →" */
 	.live {
 		align-self: flex-start;
 		display: grid;
-		grid-template-columns: auto 1fr auto;
+		grid-template-columns: auto 1fr;
 		align-items: center;
 		column-gap: 12px;
-		row-gap: 4px;
 		min-height: 48px;
 		padding: 8px 18px 8px 14px;
 		border-radius: var(--radius-pill);
@@ -45,7 +48,19 @@
 	.live:hover {
 		border-color: var(--live);
 	}
-	.through {
+	.text,
+	.sub {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		column-gap: 8px;
+	}
+	.sub::before {
+		content: '·'; /* joins the two halves on one line; gone once they're stacked */
+		color: var(--pine);
+	}
+	.through,
+	.sep {
 		color: var(--pine);
 	}
 	.go {
@@ -76,15 +91,18 @@
 	}
 	@media (max-width: 560px) {
 		.live {
-			grid-template-columns: auto 1fr;
 			border-radius: 16px; /* a full pill looks odd once it's two lines tall */
+		}
+		.text {
+			flex-direction: column;
+			row-gap: 2px;
+		}
+		.sub::before {
+			content: none;
 		}
 		.dot {
 			align-self: start;
-			margin-top: 4px; /* line up with the first line of text */
-		}
-		.go {
-			grid-column: 2;
+			margin-top: 5px; /* line up with the first line of text */
 		}
 	}
 	@keyframes live-pulse {

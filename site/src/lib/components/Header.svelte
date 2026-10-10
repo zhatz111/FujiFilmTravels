@@ -15,29 +15,29 @@
 		<a href="#gallery">Gallery</a>
 		<a href="#about">About</a>
 		<a class="ig" href="https://instagram.com/{INSTAGRAM}">@{INSTAGRAM}</a>
-		<button
-			class="theme press"
-			class:night={theme.dark}
-			aria-pressed={theme.dark}
-			aria-label="Night mode"
-			title={theme.dark ? 'Switch to day' : 'Switch to night'}
-			onclick={toggleTheme}
-		>
-			<!-- sun -> moon: the disc grows, a "bite" slides in to carve a crescent, the rays retract -->
-			<svg viewBox="0 0 24 24" aria-hidden="true">
-				<mask id="theme-bite">
-					<rect width="24" height="24" fill="#fff" />
-					<circle class="bite" r="7" fill="#000" />
-				</mask>
-				<circle class="disc" cx="12" cy="12" mask="url(#theme-bite)" />
-				<g class="rays">
-					{#each [0, 45, 90, 135, 180, 225, 270, 315] as a (a)}
-						<line x1="12" y1="2.5" x2="12" y2="4.5" transform="rotate({a} 12 12)" />
-					{/each}
-				</g>
-			</svg>
-		</button>
 	</nav>
+	<button
+		class="theme press"
+		class:night={theme.dark}
+		aria-pressed={theme.dark}
+		aria-label="Night mode"
+		title={theme.dark ? 'Switch to day' : 'Switch to night'}
+		onclick={toggleTheme}
+	>
+		<!-- sun -> moon: the disc grows, a "bite" slides in to carve a crescent, the rays retract -->
+		<svg viewBox="0 0 24 24" aria-hidden="true">
+			<mask id="theme-bite">
+				<rect width="24" height="24" fill="#fff" />
+				<circle class="bite" r="7" fill="#000" />
+			</mask>
+			<circle class="disc" cx="12" cy="12" mask="url(#theme-bite)" />
+			<g class="rays">
+				{#each [0, 45, 90, 135, 180, 225, 270, 315] as a (a)}
+					<line x1="12" y1="2.5" x2="12" y2="4.5" transform="rotate({a} 12 12)" />
+				{/each}
+			</g>
+		</svg>
+	</button>
 </header>
 
 <style>
@@ -62,6 +62,7 @@
 		color: var(--sunrise);
 	}
 	nav {
+		margin-left: auto;
 		display: flex;
 		flex-wrap: wrap;
 		align-items: center;
@@ -87,7 +88,6 @@
 		place-items: center;
 		width: 44px;
 		height: 44px;
-		margin-left: 6px;
 		border-radius: 50%;
 		border: 1px solid var(--line);
 		background: var(--surface);
@@ -140,5 +140,22 @@
 	}
 	.night {
 		color: #e9e4c8; /* moonlight */
+	}
+	/* phones: the nav wraps onto its own row, so the toggle moves up beside the name
+	   instead of taking a row of its own */
+	@media (max-width: 720px) {
+		header {
+			justify-content: flex-start;
+			gap: 8px 12px;
+		}
+		nav {
+			order: 1; /* below the name + toggle row; keyboard order stays name, links, toggle */
+			flex-basis: 100%;
+			margin-left: -10px; /* first link's text lines up with the name */
+			gap: 0;
+		}
+		nav a {
+			padding: 12px 10px; /* all four links fit one row on a phone */
+		}
 	}
 </style>

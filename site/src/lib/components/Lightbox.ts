@@ -117,6 +117,7 @@ export async function open(
 		import('photoswipe/style.css')
 	]);
 	await import('./lightbox.css'); // after PhotoSwipe's own CSS so our overrides win
+	const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
 	pswp = new PS({
 		dataSource: photos.map((p) => ({
 			src: imgUrl(p, 2560),
@@ -130,7 +131,7 @@ export async function open(
 		bgOpacity: 1,
 		// the photo itself zooms out of its gallery tile and back into it (a cheap transform on one
 		// image) while the backdrop and card fade around it; no tile on screen (a map pin) = fade
-		showHideAnimationType: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'fade' : 'zoom',
+		showHideAnimationType: still ? 'fade' : 'zoom',
 		showAnimationDuration: 380,
 		hideAnimationDuration: 300,
 		easing: 'cubic-bezier(0.2, 0.9, 0.25, 1)', // ~critically damped: fast start, no overshoot
@@ -150,6 +151,13 @@ export async function open(
 			return { top: c.t + g.t, bottom: c.b + g.b, left: c.l + g.l, right: c.r + g.r };
 		}
 	});
+	// Arrows and arrow keys glide to the next photo on the same spring a swipe uses (critically
+	// damped, ~0.2 s, interruptible) instead of PhotoSwipe's default instant cut; the card's shape
+	// follows along. Reduced motion keeps the cut.
+	if (!still) {
+		pswp.next = () => pswp!.mainScroll.moveIndexBy(1, true);
+		pswp.prev = () => pswp!.mainScroll.moveIndexBy(-1, true);
+	}
 	pswp.addFilter('thumbBounds', (bounds, _, i) => {
 		const img = document.querySelector(`[data-photo="${list[i]?.id}"] img`);
 		const r = img?.getBoundingClientRect();
@@ -164,15 +172,32 @@ export async function open(
 			onInit: (el, ps) => {
 				// behind the photo, above the backdrop (once PhotoSwipe has appended it, right after onInit)
 				queueMicrotask(() => ps.element!.insertBefore(el, ps.scrollWrap!));
+				// The card's shape tracks the slide position 1:1, never on its own timer: halfway through a
+				// swipe (dragged, flicked, or animated by the arrows/keys) it is halfway between the two
+				// photos' shapes, so the card and the photos always move as one and can be reversed mid-way.
 				const place = () => {
-					const c = card(ps.viewportSize, list[ps.currIndex]);
-					for (const k of ['t', 'r', 'b', 'l'] as const)
-						ps.element!.style.setProperty(`--c${k}`, `${c[k]}px`);
-					ps.element!.style.setProperty('--side', `${SIDE}px`);
-					ps.element!.style.setProperty('--info-h', `${INFO_H}px`);
+					const vp = ps.viewportSize;
+					const n = list.length;
+					const ms = ps.mainScroll;
+					// which photo is on screen, as a fractional index: the slide we're headed to (PhotoSwipe
+					// only updates currIndex once it lands) minus how far the strip still is from it
+					const pos = ms.slideWidth
+						? ps.potentialIndex - (ms.x - ms.getCurrSlideX()) / ms.slideWidth
+						: ps.currIndex;
+					const a = Math.floor(pos);
+					const k = pos - a;
+					const c = card(vp, list[((a % n) + n) % n]);
+					if (k > 0.001 && n > 1) {
+						const o = card(vp, list[(((a + 1) % n) + n) % n]);
+						c.t += (o.t - c.t) * k;
+						c.b += (o.b - c.b) * k;
+					}
+					for (const key of ['t', 'r', 'b', 'l'] as const)
+						ps.element!.style.setProperty(`--c${key}`, `${c[key]}px`);
 				};
-				ps.on('resize', place);
-				ps.on('change', place); // resize the card to the new photo
+				ps.element!.style.setProperty('--side', `${SIDE}px`);
+				ps.element!.style.setProperty('--info-h', `${INFO_H}px`);
+				for (const ev of ['moveMainScroll', 'change', 'resize'] as const) ps.on(ev, place);
 				place();
 			}
 		});
@@ -232,7 +257,10 @@ export async function open(
 		});
 	});
 	pswp.on('change', () => onChange(list[pswp!.currIndex].id));
+	// the page behind stays put: a swipe on the viewer never scrolls it
+	document.documentElement.style.overflow = 'hidden';
 	pswp.on('destroy', () => {
+		document.documentElement.style.overflow = '';
 		pswp = null;
 		onClose();
 	});

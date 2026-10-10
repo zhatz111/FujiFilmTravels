@@ -8,12 +8,6 @@
 	--pswp-icon-color-secondary: var(--card);
 	--pswp-icon-stroke-color: var(--card);
 	--pswp-icon-stroke-width: 0;
-	--ease-settle: cubic-bezier(
-		0.2,
-		0.9,
-		0.25,
-		1
-	); /* ~critically damped spring: fast start, no overshoot */
 	font-family: var(--font-body);
 	color: var(--ink);
 }
@@ -27,7 +21,6 @@
 		0 30px 80px rgba(10, 18, 14, 0.35),
 		0 2px 8px rgba(10, 18, 14, 0.12);
 	pointer-events: none;
-	transition: inset 320ms var(--ease-settle); /* follows each photo's height */
 }
 /* a zoomed photo stays inside the card's photo area, never under the sidebar (only while zoomed:
    the open/close zoom flies the photo from its tile, which can be anywhere on the page) */
@@ -68,10 +61,6 @@
 		transform 100ms ease-out;
 }
 .pswp__button--close {
-	transition:
-		background-color 120ms ease-out,
-		transform 100ms ease-out,
-		top 320ms var(--ease-settle);
 	top: calc(var(--ct) + 14px);
 	right: calc(var(--cr) + 14px);
 	width: 34px !important;
@@ -145,7 +134,10 @@
 	border-radius: 0 var(--radius-stage) var(--radius-stage) 0;
 	background: var(--surface);
 	overflow-y: auto;
-	transition: inset 320ms var(--ease-settle);
+	/* PhotoSwipe turns touch scrolling off for the whole viewer; the details scroll on their own
+	   (and a scroll that reaches the end doesn't carry on into the page behind) */
+	touch-action: pan-y;
+	overscroll-behavior: contain;
 }
 /* clicks pass through the empty panel to the close button under its top padding
    (beats PhotoSwipe's `.pswp--ui-visible .pswp__hide-on-close { pointer-events: auto }`) */
@@ -305,11 +297,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-	.pswp__card,
-	.pswp__info,
-	.pswp__button--close {
-		transform: none;
-		transition: none; /* PhotoSwipe's plain fade only */
+	.pswp__button--close,
+	.pswp__button--arrow {
+		transition: none;
 	}
 }
 @media (prefers-reduced-transparency: reduce) {

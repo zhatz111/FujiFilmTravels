@@ -69,6 +69,8 @@ Optional sidecar `photos/inbox/locations.toml` for photos without GPS (e.g. came
 
 Location priority: camera GPS > filename entry > nearest-in-time GPS photo by the same photographer within `gps_fill_hours` (config, default 3) > date entry. Filled locations still go through the private-zone filter. Folders below `photos/inbox/<person-id>/` (e.g. one per trip) are allowed and ignored.
 
+`uv run pipeline geotag [--dry-run]` writes hand-entered locations (`locations.toml` entries actually used, not the nearest-photo fill) into the original JPEGs' EXIF GPS, so the files keep them if the toml is lost. Only the EXIF segment is replaced; the write is verified (all non-EXIF bytes identical, every other EXIF tag and the thumbnail unchanged, GPS reads back) before an atomic replace, and file timestamps are preserved. The GPS is tagged `GPSProcessingMethod = MANUAL`, which ingest reads as `exif-manual`, so `photos.json` keeps `gps: false` for them. Writing changes the file bytes, so those photos get new ids/derivatives on the next ingest.
+
 ## Steps in `ingest`
 
 1. **Scan** `inbox` (and its per-person subfolders, see `08-build-plan.md` Phase 4.6) for `.jpg .jpeg .png .heic .heif .tif`. Register `pillow-heif` so HEIC opens.

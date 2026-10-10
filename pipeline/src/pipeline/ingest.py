@@ -107,6 +107,9 @@ def read_meta(path: Path) -> dict:
         "iso": int(iso[0] if isinstance(iso, tuple) else iso) if iso else None,
     }
     meta["camera"] = {k: v for k, v in cam.items() if v is not None} or None
+    # GPSProcessingMethod "MANUAL": a hand-entered location written back by `pipeline geotag`
+    method = gps.get(27)
+    meta["gps_manual"] = b"MANUAL" in (method if isinstance(method, bytes) else str(method or "").encode())
     return meta
 
 
@@ -121,7 +124,7 @@ def fill_locations(recs: list[dict], manual: dict, hours: float) -> None:
     donors = defaultdict(list)
     for r in recs:
         if r["lat"] is not None:
-            r["loc"] = "exif"
+            r["loc"] = "exif-manual" if r.get("gps_manual") else "exif"
             if r["local"]:
                 donors[r["photographer"]].append((datetime.fromisoformat(r["local"]), r["lat"], r["lon"]))
     window = timedelta(hours=hours)

@@ -8,6 +8,8 @@ Run everything from the repo root.
 |---|---|
 | `uv run pipeline ingest` | Reads `photos/inbox/`, makes the web-sized WebP images in `photos/out/p/`, and rewrites `data/photos.json`, `spots.json`, `countries.json`, `visited-countries.geojson`. Only new or changed photos are processed. Prints a summary at the end. |
 | `uv run pipeline ingest --force` | Same, but reprocesses every photo from scratch (use after changing `sizes` or `webp_quality`). |
+| `uv run pipeline geotag --dry-run` | Lists the photos whose hand-entered location (`locations.toml`) would be written into the original JPEG's EXIF. Changes nothing. |
+| `uv run pipeline geotag` | Writes those locations into the original JPEGs, losslessly (image data untouched, verified before saving), marked as hand-entered. Run `ingest` afterwards. |
 | `uv run pipeline report` | Reprints the summary from the last ingest: what got published, what was skipped and why, countries and spots. |
 | `uv run pipeline trips` | Checks `data/trips.json` (future/live trips) for bad dates, time zones, or locations inside a private zone. |
 | `uv run pipeline upload --dry-run` | Shows which images would be uploaded to Cloudflare R2, without uploading. |

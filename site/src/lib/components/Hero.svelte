@@ -61,12 +61,13 @@
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
-		max-width: 820px;
+		max-width: 960px; /* the headline fits on one line on laptops */
 	}
 	h1 {
 		font-size: 54px;
 		line-height: 1.05;
 		letter-spacing: 0.01em;
+		text-wrap: balance; /* when it must wrap, two even lines rather than a lone "at." */
 	}
 	p {
 		margin: 0;

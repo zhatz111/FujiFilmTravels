@@ -69,6 +69,8 @@
 		gap: 32px;
 	}
 	.globe {
+		/* the map's height; the side panel is capped to it and scrolls (SidePanel.svelte) */
+		--stage-h: 640px;
 		display: flex;
 		flex-wrap: wrap;
 		border-radius: var(--radius-stage);
@@ -79,6 +81,9 @@
 		scroll-margin-top: 16px;
 	}
 	@media (max-width: 720px) {
+		.globe {
+			--stage-h: 480px;
+		}
 		.page {
 			padding: 20px 16px 48px;
 		}

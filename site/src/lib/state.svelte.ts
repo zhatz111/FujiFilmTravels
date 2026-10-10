@@ -82,7 +82,19 @@ class AppState {
 	});
 	countOf = (c: Country, s?: Spot) => this.counts.get(s ? `${c.id}/${s.id}` : c.id) ?? 0;
 	countries = $derived(countries.filter((c) => this.countOf(c) > 0));
-	spotsIn = (c: Country) => spotsOf(c).filter((s) => this.countOf(c, s) > 0);
+	/** A country's spots that have photos under the filters, in travel order: newest trip first,
+	 *  and within a trip in the order they were visited. */
+	spotsIn = (c: Country) => {
+		const when = (s: Spot) => {
+			const v = this.spotVisitsOf(s)[0]; // newest visit to this spot
+			return { trip: visitById.get(v?.visit ?? '')?.start ?? '', day: v?.start ?? '' };
+		};
+		return spotsOf(c)
+			.filter((s) => this.countOf(c, s) > 0)
+			.map((s) => ({ s, w: when(s) }))
+			.sort((a, b) => b.w.trip.localeCompare(a.w.trip) || a.w.day.localeCompare(b.w.day))
+			.map((x) => x.s);
+	};
 	visitsOf = (c: Country) => c.visits.filter((v) => this.ok(v.id));
 	spotVisitsOf = (s: Spot) => s.visits.filter((v) => this.ok(v.visit));
 
@@ -136,6 +148,7 @@ class AppState {
 
 	syncFromUrl(search: string) {
 		const n = sanitize(parseNav(search), lookup);
+		if (this.area && n.c !== this.area.country) this.area = null;
 		if (KEYS.some((k) => n[k] !== this.nav[k])) this.nav = n;
 		if (!n.p) this.pushedPhoto = false;
 	}
@@ -149,13 +162,46 @@ class AppState {
 
 	/** bumped when World is clicked while already at World, so the globe still flies home */
 	homeTick = $state(0);
+	/** bumped when the place you're already in is clicked again (breadcrumb, panel), so the map
+	 *  flies back to that place's own view after you've zoomed or panned away */
+	refocusTick = $state(0);
+	/** An area inside a country: the spots of a map cluster you clicked into. It's a breadcrumb
+	 *  level between the country and a spot (World / Japan / Osaka area / Kobe), kept until you
+	 *  pick the whole country, World, or another country. Not in the URL. */
+	area = $state<{ country: string; name: string; spots: string[] } | null>(null);
+
 	world = () => {
+		this.area = null;
 		if (this.level === 'world') this.homeTick++;
 		else this.go({ ...this.nav, c: null, s: null, p: null });
 	};
-	selectCountry = (c: string) => this.go({ ...this.nav, c, s: null, p: null });
-	selectSpot = (c: string, s: string) => this.go({ ...this.nav, c, s, p: null });
-	up = () => (this.nav.s ? this.selectCountry(this.nav.c!) : this.world());
+	/** The whole country (forgets any area). */
+	selectCountry = (c: string) => {
+		this.area = null;
+		if (this.nav.c === c && !this.nav.s && !this.nav.p) this.refocusTick++;
+		else this.go({ ...this.nav, c, s: null, p: null });
+	};
+	/** Back to the remembered area (country level, camera framed on the area's spots). */
+	selectArea = () => {
+		if (!this.area) return;
+		if (!this.nav.s && !this.nav.p) this.refocusTick++;
+		else this.go({ ...this.nav, c: this.area.country, s: null, p: null });
+	};
+	/** Called by the map when a spot cluster is clicked. */
+	enterArea = (name: string, spots: string[]) => {
+		if (this.nav.c) this.area = { country: this.nav.c, name, spots };
+	};
+	selectSpot = (c: string, s: string) => {
+		if (this.area && (this.area.country !== c || !this.area.spots.includes(s))) this.area = null;
+		if (this.nav.c === c && this.nav.s === s && !this.nav.p) this.refocusTick++;
+		else this.go({ ...this.nav, c, s, p: null });
+	};
+	/** One level up: spot -> area (if any) -> country -> world. */
+	up = () => {
+		if (this.nav.s) return this.area ? this.selectArea() : this.selectCountry(this.nav.c!);
+		if (this.area) return this.selectCountry(this.nav.c!);
+		this.world();
+	};
 
 	/** Changing Photographer or Traveler resets Trip. */
 	setBy = (by: string | null) => this.go({ ...this.nav, by, trip: null, p: null });

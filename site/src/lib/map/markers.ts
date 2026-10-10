@@ -43,6 +43,18 @@ export const spotPin = (name: string, count: number, dates: string, onclick: () 
 		onclick
 	);
 
+/** Several spots too close to tell apart at this zoom: a stacked circle with their combined photo
+ *  count and "3 spots"; clicking zooms in until they separate (use anchor 'top', offset -19). */
+export function spotClusterPin(names: string[], count: number, onclick: () => void) {
+	const shown = names.slice(0, 2).join(', ') + (names.length > 2 ? ` +${names.length - 2}` : '');
+	return button(
+		'pin-spot cluster',
+		`${names.length} spots close together: ${names.join(', ')}. ${count} photos. Zoom in.`,
+		`<span class="circle">${count}</span><span class="chip">${names.length} spots<small>${esc(shown)}</small></span>`,
+		onclick
+	);
+}
+
 const TEAR =
 	'<svg viewBox="0 0 26 36" aria-hidden="true"><path d="M13 35C13 35 1 21.5 1 13a12 12 0 0 1 24 0c0 8.5-12 22-12 22z"/><circle cx="13" cy="13" r="8.5" fill="#fff"/></svg>';
 

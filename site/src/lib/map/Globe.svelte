@@ -10,10 +10,19 @@
 	import { coord, plural } from '#lib/format.ts';
 	import { app } from '#lib/state.svelte.ts';
 	import { displayPoint, shortName } from '#lib/trips.ts';
-	import type { Photo } from '#lib/types.ts';
+	import type { Country, Photo, Spot } from '#lib/types.ts';
 	import * as cam from './camera';
 	import { addContours } from './contours';
-	import { circle, countryPin, photoPin, ringLabel, spotPin, tripPin } from './markers';
+	import {
+		circle,
+		countryPin,
+		photoPin,
+		ringLabel,
+		spotClusterPin,
+		spotPin,
+		tripPin
+	} from './markers';
+	import { groupNearby, type Group } from './group';
 	import { prefetch } from './prefetch';
 	import { theme } from '#lib/theme.svelte.ts';
 	import { applyTheme, buildStyle, colorsFor, palette } from './style';
@@ -49,6 +58,7 @@
 	let photoMarkers: Marker[] = [];
 	// photo id -> pin element; plain DOM bookkeeping, deliberately not reactive
 	const photoPins = new Map<string, HTMLElement>(); // eslint-disable-line svelte/prefer-svelte-reactivity
+	let SC: typeof Supercluster; // loaded with the map
 	let cluster: Supercluster<{ id: string; n: number }> | null = null;
 	let clusterPhotos: Photo[] = [];
 
@@ -65,6 +75,8 @@
 	function clearMarkers() {
 		markers.forEach((m) => m.remove());
 		markers = [];
+		clearSpotPins();
+		spotsFor = null;
 		clearPhotoPins();
 		setRing(null);
 	}
@@ -86,17 +98,96 @@
 		}
 	}
 
-	function showSpotPins(cid: string, selected: string | null) {
+	// ---- spot pins, clustered: spots closer than this on screen merge into one "N spots" pin ----
+	const SPOT_OVERLAP_PX = 48; // ~ a 38px circle plus a gap; raise it to merge more eagerly
+	let spotMarkers: Marker[] = [];
+	let spotsFor: { cid: string; selected: string | null } | null = null;
+	function clearSpotPins() {
+		spotMarkers.forEach((m) => m.remove());
+		spotMarkers = [];
+	}
+
+	/** Spot pins for a country at a zoom (default: the current one); re-run on every zoomend. */
+	function showSpotPins(cid: string, selected: string | null, zoom = map!.getZoom()) {
+		spotsFor = { cid, selected };
+		clearSpotPins();
 		const c = countryById.get(cid);
 		if (!c) return;
-		for (const s of app.spotsIn(c)) {
-			if (s.id === selected) continue; // the selected spot shows as a ring + photo pins instead
-			const v = app.spotVisitsOf(s)[0];
-			const el = spotPin(s.name, app.countOf(c, s), v ? range(v.start, v.end, false) : '', () =>
-				app.selectSpot(c.id, s.id)
-			);
-			markers.push(add(el, [s.lon, s.lat], 'top', [0, -19]));
+		// the selected spot shows as a ring + photo pins instead
+		const list = app.spotsIn(c).filter((sp) => sp.id !== selected);
+		const index = new SC<{ id: string }>({ radius: SPOT_OVERLAP_PX, maxZoom: 16 }).load(
+			list.map((sp) => ({
+				type: 'Feature',
+				properties: { id: sp.id },
+				geometry: { type: 'Point', coordinates: [sp.lon, sp.lat] }
+			}))
+		);
+		const byId = new Map(list.map((sp) => [sp.id, sp]));
+		for (const f of index.getClusters([-180, -85, 180, 85], Math.round(zoom))) {
+			const [lon, lat] = f.geometry.coordinates as [number, number];
+			const props = f.properties as { cluster?: boolean; cluster_id?: number; id?: string };
+			let el: HTMLElement;
+			if (props.cluster) {
+				const leaves = index
+					.getLeaves(props.cluster_id!, Infinity)
+					.map((l) => byId.get(l.properties.id)!);
+				const n = leaves.reduce((sum, sp) => sum + app.countOf(c, sp), 0);
+				el = spotClusterPin(
+					leaves.map((sp) => sp.name),
+					n,
+					() => zoomToSpots(c, leaves)
+				);
+			} else {
+				const sp = byId.get(props.id!)!;
+				const v = app.spotVisitsOf(sp)[0];
+				el = spotPin(sp.name, app.countOf(c, sp), v ? range(v.start, v.end, false) : '', () =>
+					app.selectSpot(c.id, sp.id)
+				);
+			}
+			spotMarkers.push(add(el, [lon, lat], 'top', [0, -19]));
 		}
+	}
+
+	/** Room kept clear around framed spots: the breadcrumb + hint along the top, and the name
+	 *  chips that hang ~60px below each circle. (No legend at country level, so the bottom is free.) */
+	const clear = () =>
+		container.clientWidth > 720
+			? { top: 80, bottom: 75, left: 70, right: 70 }
+			: { top: 70, bottom: 70, left: 36, right: 36 };
+
+	const boundsOf = (list: { lon: number; lat: number }[]) => {
+		const b = new maplibre.LngLatBounds();
+		for (const sp of list) b.extend([sp.lon, sp.lat]);
+		return b;
+	};
+
+	/** Cluster clicked: remember it as an area (a breadcrumb level), then frame its spots so their
+	 *  pins have room to separate. Named after its biggest spot: "Amagasaki area". */
+	function zoomToSpots(c: Country, list: Spot[]) {
+		const top = [...list].sort((a, b) => app.countOf(c, b) - app.countOf(c, a))[0];
+		app.enterArea(
+			`${top.name} area`,
+			list.map((sp) => sp.id)
+		);
+		cam.flyTo(map!, placeView(c), 1.2, 1200);
+	}
+
+	/** Landing view for a country, or for the remembered area inside it: fit the (filtered) spots
+	 *  inside the clear part of the map, not under the overlays. */
+	function placeView(c: Country) {
+		const inArea = app.area?.country === c.id ? app.area.spots : null;
+		const spots = app.spotsIn(c).filter((sp) => !inArea || inArea.includes(sp.id));
+		const fit = spots.length
+			? map!.cameraForBounds(boundsOf(spots), { padding: clear(), maxZoom: inArea ? 13 : 9 })
+			: undefined;
+		const center = fit?.center ? maplibre.LngLat.convert(fit.center) : null;
+		if (!center) return { lon: c.lon, lat: c.lat, zoom: cam.countryZoom(c.zoom) };
+		const zoom = fit!.zoom ?? c.zoom;
+		return {
+			lon: center.lng,
+			lat: center.lat,
+			zoom: inArea ? Math.min(13, zoom) : cam.countryZoom(zoom)
+		};
 	}
 
 	function setRing(spot: { c: string; s: string } | null) {
@@ -121,67 +212,68 @@
 		}
 	}
 
+	/** Photos within ~a mile share one marker (groupNearby); markers that still overlap on screen
+	 *  (e.g. after zooming out by hand) merge again by pixel distance. */
+	let groups: Group<Photo & { n: number }>[] = [];
 	async function loadCluster() {
-		const { default: SC } = await import('supercluster');
+		groups = groupNearby(clusterPhotos.map((p, i) => ({ ...p, n: i + 1 })));
 		cluster = new SC({ radius: 40, maxZoom: 17 });
 		cluster.load(
-			clusterPhotos.map((p, i) => ({
+			groups.map((g, gi) => ({
 				type: 'Feature',
-				properties: { id: p.id, n: i + 1 },
-				geometry: { type: 'Point', coordinates: [p.lon, p.lat] }
+				properties: { id: `${gi}`, n: g.items.length },
+				geometry: { type: 'Point', coordinates: [g.lon, g.lat] }
 			}))
 		);
 	}
 
-	/** Photo pins for the selected spot, clustered at the current zoom. `drop` animates them in. */
+	/** Photo markers for the selected spot at the current zoom. `drop` animates them in. */
 	function renderPhotoPins(drop: boolean) {
 		clearPhotoPins();
 		if (!cluster || !map) return;
-		const byId = new Map(clusterPhotos.map((p) => [p.id, p]));
 		const items = cluster.getClusters([-180, -85, 180, 85], Math.floor(map.getZoom()));
 		items.forEach((f, i) => {
 			const [lon, lat] = f.geometry.coordinates as [number, number];
 			const delay = drop && !cam.reducedMotion() ? i : null;
-			const props = f.properties as {
-				cluster?: boolean;
-				cluster_id?: number;
-				point_count?: number;
-				id?: string;
-				n?: number;
-			};
+			const props = f.properties as { cluster?: boolean; cluster_id?: number; id?: string };
+			const merged = props.cluster
+				? cluster!.getLeaves(props.cluster_id!, Infinity).map((l) => groups[+l.properties.id])
+				: [groups[+props.id!]];
+			const photos = merged.flatMap((g) => g.items);
+			const who = new Set(photos.map((p) => p.photographer));
+			const color = who.size === 1 ? colorOf(photos[0].photographer) : MIXED;
 			let el: HTMLElement;
-			if (props.cluster) {
-				const id = props.cluster_id!;
-				const leaves = cluster!.getLeaves(id, Infinity).map((l) => byId.get(l.properties.id)!);
-				const who = new Set(leaves.map((p) => p.photographer));
+			if (photos.length === 1) {
+				const p = photos[0];
 				el = photoPin(
-					props.point_count!,
-					`${props.point_count} photos here, by ${[...who].map(personName).join(', ')}`,
-					`${props.point_count} PHOTOS · ${coord(lat, lon)}`,
-					who.size === 1 ? colorOf(leaves[0].photographer) : MIXED,
-					delay,
-					() => {
-						const zoom = cluster!.getClusterExpansionZoom(id);
-						const same = new Set(leaves.map((p) => `${p.lat},${p.lon}`)).size === 1;
-						// ponytail: pins that never separate (same GPS point) open the lightbox on the first one
-						if (same || zoom > 17) app.openPhoto(leaves[0].id);
-						else cam.flyTo(map!, { lon, lat, zoom }, 1.2, 800);
-					}
-				);
-				el.classList.add('cluster');
-				leaves.forEach((p) => photoPins.set(p.id, el));
-			} else {
-				const p = byId.get(props.id!)!;
-				el = photoPin(
-					props.n!,
-					`Photo ${props.n} by ${personName(p.photographer)}`,
-					`PHOTO ${props.n} · ${coord(lat, lon)}`,
-					colorOf(p.photographer),
+					p.n,
+					`Photo ${p.n} by ${personName(p.photographer)}`,
+					`PHOTO ${p.n} · ${coord(lat, lon)}`,
+					color,
 					delay,
 					() => app.openPhoto(p.id)
 				);
-				photoPins.set(p.id, el);
+			} else {
+				const n = photos.length;
+				el = photoPin(
+					n,
+					`${n} photos taken here, by ${[...who].map(personName).join(', ')}. Open them.`,
+					`${n} PHOTOS · ${coord(lat, lon)}`,
+					color,
+					delay,
+					() => {
+						// groups merged only because we're zoomed out: zoom in until they separate;
+						// a single group (all within ~a mile): open its photos in the lightbox
+						if (props.cluster) {
+							const zoom = cluster!.getClusterExpansionZoom(props.cluster_id!);
+							if (zoom <= 17) return void cam.flyTo(map!, { lon, lat, zoom }, 1.2, 800);
+						}
+						app.openPhoto(photos[0].id);
+					}
+				);
+				el.classList.add('cluster');
 			}
+			for (const p of photos) photoPins.set(p.id, el);
 			photoMarkers.push(add(el, [lon, lat], 'bottom'));
 		});
 		highlight(app.nav.p);
@@ -216,9 +308,10 @@
 			return;
 		}
 		for (const sp of app.spotsIn(c)) prefetch(map!, sp.lon, sp.lat, cam.spotZoom(sp.zoom));
-		showSpotPins(c.id, n.s);
+		// cluster for the zoom we're about to land on, so pins don't merge then split mid-dive
+		showSpotPins(c.id, n.s, s ? cam.spotZoom(s.zoom) : placeView(c).zoom);
 		if (!s) {
-			const t = { lon: c.lon, lat: c.lat, zoom: cam.countryZoom(c.zoom) };
+			const t = placeView(c);
 			if (!moved) return;
 			if (!from) await cam.jump(map!, t);
 			else if (!from.c) await cam.spinIn(map!, t);
@@ -256,6 +349,18 @@
 		untrack(() => {
 			lastInteraction = 0;
 			cam.home(map!);
+		});
+	});
+
+	// ---------- the current place clicked again: fly back to its own view ----------
+	$effect(() => {
+		if (!app.refocusTick || !map) return;
+		untrack(() => {
+			const c = app.country;
+			const s = app.spot;
+			if (!c) return;
+			if (s) cam.flyTo(map!, { lon: s.lon, lat: s.lat, zoom: cam.spotZoom(s.zoom) }, 1.2, 1200);
+			else cam.flyTo(map!, placeView(c), 1.42, 1200);
 		});
 	});
 
@@ -336,7 +441,7 @@
 	onMount(() => {
 		let disposed = false;
 		(async () => {
-			const [ml, style, , worker] = await Promise.all([
+			const [ml, style, , worker, sc] = await Promise.all([
 				import('maplibre-gl'),
 				buildStyle(document.documentElement.dataset.theme === 'dark').catch(
 					() =>
@@ -349,8 +454,10 @@
 				),
 				import('maplibre-gl/dist/maplibre-gl.css'),
 				// v6 loads its worker from a separate module; let Vite bundle it and pass the URL
-				import('maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url')
+				import('maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'),
+				import('supercluster')
 			]);
+			SC = sc.default;
 			if (disposed) return;
 			appliedDark = document.documentElement.dataset.theme === 'dark';
 			maplibre = ml;
@@ -388,7 +495,9 @@
 				lastInteraction = performance.now();
 			});
 			m.on('zoomend', () => {
-				if (cluster && !m.isMoving()) renderPhotoPins(false);
+				if (m.isMoving()) return;
+				if (spotsFor) showSpotPins(spotsFor.cid, spotsFor.selected);
+				if (cluster) renderPhotoPins(false);
 			});
 			m.on('load', () => {
 				const below = m.getLayer('boundary_3') ? 'boundary_3' : undefined;
@@ -481,23 +590,42 @@
 			<span aria-hidden="true">/</span>
 			<button
 				onclick={() => app.selectCountry(app.country!.id)}
-				aria-current={app.level === 'country' ? 'location' : undefined}>{app.country.name}</button
+				aria-current={app.level === 'country' && !app.area ? 'location' : undefined}
+				>{app.country.name}</button
+			>
+		{/if}
+		{#if app.area && app.area.country === app.country?.id}
+			<span aria-hidden="true">/</span>
+			<button
+				onclick={app.selectArea}
+				aria-current={app.level === 'country' ? 'location' : undefined}>{app.area.name}</button
 			>
 		{/if}
 		{#if app.spot}
 			<span aria-hidden="true">/</span>
-			<span class="here" aria-current="location">{app.spot.name}</span>
+			<button
+				onclick={() => app.selectSpot(app.country!.id, app.spot!.id)}
+				aria-current="location"
+				title="Back to {app.spot.name}">{app.spot.name}</button
+			>
 		{/if}
 	</nav>
 
-	<div class="legend glass" aria-label="Map legend">
-		<span><i class="live"></i>Here now</span>
-		<span><i class="upcoming"></i>Upcoming trip</span>
-		<span><i class="visited"></i>Visited</span>
-		{#each shooters as p (p.id)}
-			<span><i class="shooter" style:background={p.color}></i>{p.name}'s photos</span>
-		{/each}
-	</div>
+	<!-- legend only where it explains something on screen: trip markers at World,
+	     photographers' pin colors at a spot. Hidden at country level to keep the map clear. -->
+	{#if app.level === 'world'}
+		<div class="legend glass" aria-label="Map legend">
+			<span><i class="live"></i>Here now</span>
+			<span><i class="upcoming"></i>Upcoming trip</span>
+			<span><i class="visited"></i>Visited</span>
+		</div>
+	{:else if app.level === 'spot' && shooters.length}
+		<div class="legend glass" aria-label="Map legend">
+			{#each shooters as p (p.id)}
+				<span><i class="shooter" style:background={p.color}></i>{p.name}'s photos</span>
+			{/each}
+		</div>
+	{/if}
 	<div class="hint glass mono">{HINTS[app.level]}</div>
 </div>
 
@@ -506,7 +634,7 @@
 		position: relative;
 		flex: 999 1 620px;
 		min-width: 0;
-		height: 640px;
+		height: var(--stage-h); /* set on the globe section in +page.svelte */
 		overflow: hidden;
 	}
 	/* ---- day <-> night (timings line up with tokens.css: sky 300ms+1.6s at dusk, 200ms at dawn) ---- */
@@ -623,9 +751,6 @@
 	.crumbs [aria-current] {
 		color: var(--ink);
 	}
-	.crumbs .here {
-		padding: 0 12px;
-	}
 	.crumbs > span[aria-hidden] {
 		color: var(--faint);
 	}
@@ -674,10 +799,10 @@
 	.legend .visited {
 		background: var(--sunrise);
 	}
+	/* top-right, level with the breadcrumb, so the bottom of the map stays free for pins */
 	.hint {
-		left: 50%;
-		bottom: 18px;
-		transform: translateX(-50%);
+		top: 23px;
+		right: 16px;
 		padding: 8px 14px;
 		border-radius: var(--radius-pill);
 		font-size: 11px;
@@ -688,11 +813,9 @@
 		pointer-events: none;
 	}
 	@media (max-width: 720px) {
-		.stage {
-			height: 480px;
-		}
-		.legend {
-			display: none;
+		.legend,
+		.hint {
+			display: none; /* small screens: the map needs the room; pins are self-explanatory */
 		}
 	}
 
@@ -787,6 +910,21 @@
 		flex-direction: column;
 		align-items: center;
 		font: 600 13px var(--font-body);
+	}
+	/* several spots merged: one circle with their combined photo count */
+	.map :global(.pin-spot.cluster .circle) {
+		font-weight: 600;
+	}
+	.map :global(.pin-spot.cluster .chip) {
+		font: 500 11px var(--font-mono);
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+	.map :global(.pin-spot.cluster .chip small) {
+		text-transform: none;
+		letter-spacing: 0;
+		font-family: var(--font-body);
+		font-size: 11px;
 	}
 	.map :global(.pin-spot .chip small) {
 		font: 500 10px var(--font-mono);

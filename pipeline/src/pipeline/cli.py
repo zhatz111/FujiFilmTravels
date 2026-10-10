@@ -40,6 +40,17 @@ def ingest(
 
 
 @app.command()
+def geotag(
+    config: Path = CONFIG,
+    dry_run: bool = typer.Option(False, "--dry-run", help="List what would be tagged; change nothing."),
+) -> None:
+    """Write hand-entered locations (locations.toml) into the original JPEGs' EXIF, losslessly."""
+    from .geotag import run
+
+    run(load_config(config), dry_run)
+
+
+@app.command()
 def upload(
     config: Path = CONFIG,
     dry_run: bool = typer.Option(False, "--dry-run", help="Show what would upload."),

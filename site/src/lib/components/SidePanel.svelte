@@ -14,11 +14,26 @@
 		return v ? range(v.start, v.end, false) : '';
 	};
 
-	type Card = { start: string; end: string; photos: number; label?: string; people: string[] };
+	type Card = {
+		id: string;
+		start: string;
+		end: string;
+		photos: number;
+		label?: string;
+		people: string[];
+	};
 </script>
 
 {#snippet tripCard(t: Card)}
-	<div class="trip">
+	{@const on = app.nav.trip === t.id}
+	<!-- a trip card is also the quickest Trip filter: click to show only this trip, again to clear -->
+	<button
+		class="trip press"
+		class:on
+		aria-pressed={on}
+		title={on ? 'Show all trips again' : 'Show only this trip'}
+		onclick={() => app.setTrip(on ? null : t.id)}
+	>
 		<div class="trip-top">
 			<span class="trip-date">{range(t.start, t.end)}</span>
 			<span class="mono count">{plural(t.photos, 'photo')}</span>
@@ -28,7 +43,7 @@
 			<Avatars ids={t.people} />
 			<span>{names(t.people.map(personName))}</span>
 		</div>
-	</div>
+	</button>
 {/snippet}
 
 {#snippet spotRows(c: Country)}
@@ -101,18 +116,18 @@
 					{/each}
 					<span class="mono meta">{coord(c.lat, c.lon)} · {plural(app.countOf(c), 'photo')}</span>
 				</div>
-				<span class="label">Spots</span>
-				{@render spotRows(c)}
 				<span class="label">{trips.length === 1 ? 'Trip' : 'Trips here'}</span>
 				{#each trips as v (v.id)}
 					{@render tripCard({ ...v, people: v.companions })}
 				{/each}
+				<span class="label">Spots</span>
+				{@render spotRows(c)}
 				<a class="mono jump" href="#gallery">View {plural(app.gallery.length, 'photo')} ↓</a>
 			{:else}
 				{@const c = app.country}
 				{@const s = app.spot}
 				{@const trips = app.spotVisitsOf(s)}
-				<button class="pill back mono" onclick={() => app.selectCountry(c.id)}>← {c.name}</button>
+				<button class="pill back mono" onclick={app.up}>← {app.area?.name ?? c.name}</button>
 				<div class="col head">
 					<h2>{s.name}</h2>
 					<span class="visited">
@@ -125,7 +140,11 @@
 				</div>
 				<span class="label">{trips.length === 1 ? 'Trip' : 'Trips here'}</span>
 				{#each trips as v (v.visit)}
-					{@render tripCard({ ...v, label: c.visits.find((x) => x.id === v.visit)?.label })}
+					{@render tripCard({
+						...v,
+						id: v.visit,
+						label: c.visits.find((x) => x.id === v.visit)?.label
+					})}
 				{/each}
 				<span class="label">Spots in {c.name}</span>
 				{@render spotRows(c)}
@@ -226,10 +245,19 @@
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
+		width: 100%;
 		padding: 14px;
 		border-radius: var(--radius-row);
 		border: 1px solid var(--line);
 		background: var(--card);
+		text-align: left;
+	}
+	.trip:hover {
+		border-color: var(--muted);
+	}
+	.trip.on {
+		border-color: var(--pine);
+		box-shadow: inset 0 0 0 1px var(--pine);
 	}
 	.trip-top {
 		display: flex;
@@ -297,6 +325,18 @@
 		margin: 0;
 		color: var(--muted);
 	}
+	/* beside the map: never taller than it (a long spot list would stretch the section and leave
+	   empty space under the map), so the panel scrolls on its own instead */
+	@media (min-width: 961px) {
+		aside {
+			max-height: var(--stage-h);
+			overflow-y: auto;
+			overscroll-behavior: contain;
+			scrollbar-width: thin;
+			scrollbar-color: var(--line) transparent;
+		}
+	}
+	/* under the map (phones/tablets): grows with its content as part of the page */
 	@media (max-width: 960px) {
 		aside {
 			border-left: 0;

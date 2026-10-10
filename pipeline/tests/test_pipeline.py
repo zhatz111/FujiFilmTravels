@@ -190,3 +190,28 @@ def test_photo_tags_drop_hidden_and_reject_unknown():
     assert photo_tags(["alex", "zach", "ghost"], "a.jpg", known, ORDER) == ["zach", "alex"]
     with pytest.raises(SystemExit, match="unknown people"):
         photo_tags(["bob"], "a.jpg", known, ORDER)
+
+
+def test_geotag_writes_gps_losslessly_and_marks_it_manual(tmp_path):
+    import piexif
+
+    from pipeline.geotag import _image_only, write_gps
+    from pipeline.ingest import read_meta
+
+    src = tmp_path / "DSCF0001.JPG"
+    exif = piexif.dump({"0th": {271: b"FUJIFILM"}, "Exif": {36867: b"2025:04:17 10:30:00"}})
+    Image.new("RGB", (64, 48), "#7a8c95").save(src, quality=90, exif=exif)
+    before = src.read_bytes()
+
+    write_gps(src, -50.4354, -73.0029)
+
+    after = src.read_bytes()
+    assert _image_only(after) == _image_only(before)  # not re-encoded
+    meta = read_meta(src)
+    assert abs(meta["lat"] - -50.4354) < 1e-6 and abs(meta["lon"] - -73.0029) < 1e-6
+    assert meta["gps_manual"] is True
+    assert meta["local"] == "2025-04-17T10:30:00"  # other EXIF kept
+
+    recs = [{**meta, "name": src.name, "photographer": "zach"}]
+    fill_locations(recs, {}, hours=3)
+    assert recs[0]["loc"] == "exif-manual"  # still reported as hand-placed, not camera GPS

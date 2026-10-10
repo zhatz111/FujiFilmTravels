@@ -23,12 +23,15 @@
 {/if}
 
 <style>
+	/* dot | text | link on one row; on narrow screens the link drops under the text,
+	   and the dot stays beside the first line instead of wrapping onto its own */
 	.live {
 		align-self: flex-start;
-		display: flex;
-		flex-wrap: wrap;
+		display: grid;
+		grid-template-columns: auto 1fr auto;
 		align-items: center;
-		gap: 12px;
+		column-gap: 12px;
+		row-gap: 4px;
 		min-height: 48px;
 		padding: 8px 18px 8px 14px;
 		border-radius: var(--radius-pill);
@@ -46,6 +49,7 @@
 		color: var(--pine);
 	}
 	.go {
+		white-space: nowrap;
 		font-size: 11px;
 		letter-spacing: 0.1em;
 		text-transform: uppercase;
@@ -69,6 +73,19 @@
 	}
 	.dot i + i {
 		animation-delay: 0.9s;
+	}
+	@media (max-width: 560px) {
+		.live {
+			grid-template-columns: auto 1fr;
+			border-radius: 16px; /* a full pill looks odd once it's two lines tall */
+		}
+		.dot {
+			align-self: start;
+			margin-top: 4px; /* line up with the first line of text */
+		}
+		.go {
+			grid-column: 2;
+		}
 	}
 	@keyframes live-pulse {
 		from {

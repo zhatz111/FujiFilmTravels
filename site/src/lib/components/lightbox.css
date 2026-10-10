@@ -1,6 +1,7 @@
-/* PhotoSwipe restyled to Alpine Morning (docs/03-design-system.md "Lightbox"):
-   a card that grows out of the tile that opened it, over a dimmed, blurred page.
-   Card geometry (--ct/--cr/--cb/--cl insets, --side, --info-h) is set by Lightbox.ts. */
+/* PhotoSwipe restyled to Alpine Morning (docs/03-design-system.md "Lightbox"): the photo zooms out
+   of its tile into a card that hugs it with a thin border, details beside it (below on phones).
+   Lightbox.ts positions the card, details, close and arrows every time the slide moves (translate +
+   size, measured from the top-left); this file only styles them. */
 .pswp {
 	--pswp-bg: rgba(10, 18, 14, 0.5);
 	--pswp-placeholder-bg: var(--line);
@@ -8,13 +9,18 @@
 	--pswp-icon-color-secondary: var(--card);
 	--pswp-icon-stroke-color: var(--card);
 	--pswp-icon-stroke-width: 0;
+	--card-r: 18px; /* = photo radius 8px + the 10px border: the two corners stay concentric */
 	font-family: var(--font-body);
 	color: var(--ink);
 }
-.pswp__card {
+.pswp__card,
+.pswp__info {
 	position: absolute;
-	inset: var(--ct) var(--cr) var(--cb) var(--cl);
-	border-radius: var(--radius-stage);
+	top: 0;
+	left: 0;
+}
+.pswp__card {
+	border-radius: var(--card-r);
 	background: var(--card);
 	border: 1px solid var(--line);
 	box-shadow:
@@ -22,130 +28,106 @@
 		0 2px 8px rgba(10, 18, 14, 0.12);
 	pointer-events: none;
 }
-/* a zoomed photo stays inside the card's photo area, never under the sidebar (only while zoomed:
-   the open/close zoom flies the photo from its tile, which can be anywhere on the page) */
-.pswp--zoomed-in .pswp__item {
-	clip-path: inset(
-		var(--ct) calc(var(--cr) + var(--side)) var(--cb) var(--cl) round var(--radius-stage) 0 0
-			var(--radius-stage)
-	);
-}
 /* PhotoSwipe puts overlay elements at z 10; the card belongs under the photo */
 .pswp .pswp__card {
 	z-index: 0;
 }
-/* close button sits over the sidebar's top corner */
+/* a zoomed photo stays inside its area, never under the details (only while zoomed: the
+   open/close zoom flies the photo from its tile, which can be anywhere on the page) */
+.pswp--zoomed-in .pswp__item {
+	clip-path: var(--clip);
+}
+/* the close button sits above the details panel */
 .pswp .pswp__top-bar {
 	z-index: 11;
 }
 .pswp__img {
-	border-radius: 6px;
+	border-radius: 8px;
 }
 .pswp__counter {
-	display: none; /* position is shown in the sidebar */
+	display: none; /* position is shown in the details */
 }
 
-/* quiet, round buttons that belong to the card; they react on press, not release */
+/* small solid buttons that sit on the photo (arrows; close on phones) or the card's corner (close
+   on desktop). Placed by `translate`; pressed by `scale`, so the two never fight. */
 .pswp__button--close,
 .pswp__button--arrow {
 	display: grid !important;
 	place-items: center;
 	position: absolute !important;
+	top: 0 !important;
+	left: 0 !important;
+	right: auto !important;
 	margin: 0 !important;
 	padding: 0 !important;
 	border-radius: 50% !important;
 	border: 0 !important;
+	background: color-mix(in srgb, var(--card) 92%, transparent) !important;
+	box-shadow:
+		0 1px 3px rgba(10, 18, 14, 0.22),
+		0 0 0 0.5px rgba(10, 18, 14, 0.08);
 	visibility: visible;
 	transition:
-		background-color 120ms ease-out,
-		transform 100ms ease-out;
+		background-color 150ms ease,
+		scale 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .pswp__button--close {
-	top: calc(var(--ct) + 14px);
-	right: calc(var(--cr) + 14px);
-	width: 34px !important;
-	height: 34px !important;
-	background: transparent !important;
+	width: 32px !important;
+	height: 32px !important;
 }
 .pswp__button--arrow {
-	top: 50% !important;
-	width: 44px !important;
-	height: 44px !important;
-	margin-top: -22px !important;
-	background: var(--surface) !important;
+	width: 40px !important;
+	height: 40px !important;
 }
 /* zoomed in: the arrows step aside so the photo has the whole area (pan, or zoom out to navigate) */
 .pswp--zoomed-in .pswp__button--arrow {
 	opacity: 0 !important;
 	pointer-events: none;
 }
-.pswp__button--arrow--prev {
-	left: calc(var(--cl) + 14px);
-}
-.pswp__button--arrow--next {
-	right: calc(var(--cr) + var(--side) + 14px); /* just left of the sidebar */
-}
 .pswp .pswp__button--close .pswp__icn,
 .pswp .pswp__button--arrow .pswp__icn {
 	position: static;
 	margin: 0;
-	width: 20px;
-	height: 20px;
+	width: 18px;
+	height: 18px;
 	fill: none;
 	stroke: var(--ink);
 	transform: none; /* PhotoSwipe mirrors the next arrow; ours is drawn facing right */
 }
 .pswp .pswp__button--close .pswp__icn {
-	width: 18px;
-	height: 18px;
-	stroke: var(--muted);
+	width: 16px;
+	height: 16px;
 }
-.pswp__button--close:hover {
-	background: var(--surface) !important;
-}
-.pswp__button--close:hover .pswp__icn {
-	stroke: var(--ink);
-}
-.pswp__button--arrow:hover {
-	background: var(--line) !important;
+@media (hover: hover) and (pointer: fine) {
+	.pswp__button--close:hover,
+	.pswp__button--arrow:hover {
+		background: var(--card) !important;
+	}
 }
 .pswp__button--close:active,
 .pswp__button--arrow:active {
-	transform: scale(0.92);
-	transition-duration: 0ms;
+	scale: 0.95;
+	transition-duration: 0ms; /* the press shows at once; the release eases back */
 }
 .pswp__button:focus-visible {
 	outline: 2px solid var(--pine);
 	outline-offset: 2px;
 }
 
-/* info sidebar: the card's right column, a shade off the photo side */
+/* details: the card's right column on desktop, a shade off the photo side */
 .pswp__info {
-	position: absolute;
-	top: var(--ct);
-	right: var(--cr);
-	bottom: var(--cb);
-	width: var(--side);
-	padding: 60px 28px 28px;
+	padding: 56px 24px 24px;
 	display: flex;
 	flex-direction: column;
 	gap: 20px;
 	border-left: 1px solid var(--line);
-	border-radius: 0 var(--radius-stage) var(--radius-stage) 0;
+	border-radius: 0 var(--card-r) var(--card-r) 0;
 	background: var(--surface);
 	overflow-y: auto;
 	/* PhotoSwipe turns touch scrolling off for the whole viewer; the details scroll on their own
 	   (and a scroll that reaches the end doesn't carry on into the page behind) */
 	touch-action: pan-y;
 	overscroll-behavior: contain;
-}
-/* clicks pass through the empty panel to the close button under its top padding
-   (beats PhotoSwipe's `.pswp--ui-visible .pswp__hide-on-close { pointer-events: auto }`) */
-.pswp--ui-visible .pswp__info.pswp__hide-on-close {
-	pointer-events: none;
-}
-.pswp__info > * {
-	pointer-events: auto;
 }
 .pswp-info__head {
 	display: flex;
@@ -260,17 +242,16 @@
 }
 
 @media (max-width: 900px) {
-	/* phones: metadata sits under the photo, along the card's bottom edge */
+	/* phones: the details fill the card under the photo and scroll when they don't fit */
+	.pswp {
+		--card-r: 16px; /* photo radius 8px + the 8px border */
+	}
 	.pswp__info {
-		top: auto;
-		left: var(--cl);
-		width: auto;
-		max-height: var(--info-h);
-		padding: 16px;
+		padding: 14px 16px 20px;
 		gap: 10px;
 		border-left: 0;
 		border-top: 1px solid var(--line);
-		border-radius: 0 0 var(--radius-stage) var(--radius-stage);
+		border-radius: 0 0 var(--card-r) var(--card-r);
 	}
 	.pswp__info h3 {
 		font-size: 22px;
@@ -281,18 +262,8 @@
 	.pswp-info__people {
 		padding-top: 10px;
 	}
-	.pswp__button--close {
-		top: calc(var(--ct) + 9px);
-		right: calc(var(--cr) + 9px);
-	}
 	.pswp__button--arrow {
 		display: none !important; /* swipe on touch */
-	}
-	.pswp--zoomed-in .pswp__item {
-		clip-path: inset(
-			var(--ct) var(--cr) calc(var(--cb) + var(--info-h)) var(--cl) round var(--radius-stage)
-				var(--radius-stage) 0 0
-		);
 	}
 }
 
